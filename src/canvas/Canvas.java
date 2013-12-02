@@ -1,7 +1,6 @@
 package canvas;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,16 +8,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
 
 /**
  * Canvas represents a drawing surface that allows the user to draw
@@ -28,6 +22,7 @@ public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Image drawingBuffer;
     private Color color;
+    private int strokeWidth;
     
     /**
      * Make a canvas.
@@ -35,7 +30,8 @@ public class Canvas extends JPanel {
      * @param height height in pixels
      */
     public Canvas(int width, int height) {
-    	this.color = Color.RED;
+    	this.color = Color.BLACK;
+    	this.strokeWidth = 3;
         this.setPreferredSize(new Dimension(width, height));
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
@@ -45,9 +41,16 @@ public class Canvas extends JPanel {
     
     public void setColor(Color color) {
     	this.color = color;
-    	System.out.println(this.color);
+    }
+        
+    public Color getColor() {
+    	return this.color;
     }
     
+    public void setStrokeWidth(int strokeWidth) {
+    	this.strokeWidth = strokeWidth;
+    }
+        
     /**
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
@@ -126,6 +129,7 @@ public class Canvas extends JPanel {
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         
+        g.setStroke(new BasicStroke(this.strokeWidth));
         g.setColor(this.color);
         g.drawLine(x1, y1, x2, y2);
         
@@ -151,10 +155,6 @@ public class Canvas extends JPanel {
         // draw a line segment from that last point to the point of the next mouse event.
         private int lastX, lastY;
         private Color color;
-
-        public DrawingController() {
-//        	this.color = color;
-        }
         
         /*
          * When mouse button is pressed down, start drawing.
@@ -184,33 +184,4 @@ public class Canvas extends JPanel {
         public void mouseExited(MouseEvent e) { }
     }
     
-    /*
-     * Main program. Make a window containing a Canvas.
-     */
-/*    public static void main(String[] args) {
-        // set up the UI (on the event-handling thread)
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame window = new JFrame("Freehand Canvas");
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setLayout(new BorderLayout());
-                Canvas canvas = new Canvas(800, 600);
-                window.add(canvas, BorderLayout.CENTER);
-                JToggleButton eraserPicker = new JToggleButton("eraser", false);
-                window.add(eraserPicker, BorderLayout.SOUTH);
-                Color color;
-                eraserPicker.addActionListener(new ActionListener() {
-                	public void actionPerformed(ActionEvent event) {
-//                		if (canvas.getColor().equals(Color.WHITE)) {
-//                			color = Color.BLUE;
-//                		} else {
-//                			canvas.setColor(Color.WHITE);
-//                		}
-                	}
-                });
-                window.pack();
-                window.setVisible(true);
-            }
-        });
-    }*/
 }
