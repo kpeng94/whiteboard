@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
@@ -30,7 +31,8 @@ public class Whiteboard extends JFrame {
         this.setLayout(new BorderLayout());
 		this.canvas = canvas;
 		this.users = users;
-        this.eraserPicker = new JToggleButton("eraser", false);
+		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
+        this.eraserPicker = new JToggleButton("eraser", eraserIcon, false);
         eraserPicker.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent event) {
         		if (getColor().equals(Color.WHITE)) {
