@@ -13,8 +13,8 @@ import javax.swing.SwingUtilities;
 
 public class Whiteboard extends JFrame {
 	private Canvas canvas;
-	// TODO: Change to thread-safe versions later
 	private ArrayList<String> users;
+	private ArrayList<LineSegment> segments;
 	private final JToggleButton eraserPicker;
 	
 	/**
@@ -31,6 +31,7 @@ public class Whiteboard extends JFrame {
         this.setLayout(new BorderLayout());
 		this.canvas = canvas;
 		this.users = users;
+		this.segments = new ArrayList<LineSegment>();
 		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
         this.eraserPicker = new JToggleButton("eraser", eraserIcon, false);
         eraserPicker.addActionListener(new ActionListener() {
