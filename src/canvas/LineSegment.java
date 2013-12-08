@@ -12,6 +12,7 @@ public class LineSegment {
 	private Point start;
 	private Point end;
 	private Color color;
+	private int strokeSize;
 	
 	/**
 	 * The constructor for the LineSegment class.
@@ -20,11 +21,13 @@ public class LineSegment {
 	 * @param x2 - the x coordinate for the second endpoint
 	 * @param y2 - the y coordinate for the second endpoint
 	 * @param lineColor - the color that the line is drawn in
+	 * @param strokeSize - the size of the stroke
 	 */
-	public LineSegment(int x1, int y1, int x2, int y2, Color lineColor){
+	public LineSegment(int x1, int y1, int x2, int y2, Color lineColor, int strokeSize) {
 		start = new Point(x1, y1);
 		end = new Point(x2, y2);
 		color = lineColor;
+		this.strokeSize = strokeSize;
 	}
 	
 	/** 
@@ -49,5 +52,13 @@ public class LineSegment {
 	 */
 	public Color getColor(){
 		return color;
+	}
+	
+	/**
+	 * Returns the size of the stroke
+	 * @return size of the stroke
+	 */
+	public int getStrokeSize() {
+		return this.strokeSize;
 	}
 }
