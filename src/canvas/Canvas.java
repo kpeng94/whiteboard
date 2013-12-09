@@ -1,6 +1,7 @@
 package canvas;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,7 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * Canvas represents a drawing surface that allows the user to draw
@@ -126,16 +129,18 @@ public class Canvas extends JPanel {
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
-    private void drawLineSegment(int x1, int y1, int x2, int y2) {
+    public LineSegment drawLineSegment(int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         
         g.setStroke(new BasicStroke(this.strokeWidth));
         g.setColor(this.color);
         g.drawLine(x1, y1, x2, y2);
+        LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, this.color, this.strokeWidth);
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
+        return lineSegment;
     }
     
     /*
@@ -183,5 +188,15 @@ public class Canvas extends JPanel {
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
     }
-    
+	public static void main(final String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+//				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), 
+//													   new ArrayList<String>());
+//                whiteboard.pack();
+//
+//				whiteboard.setVisible(true);
+			}
+		});
+	}	
 }

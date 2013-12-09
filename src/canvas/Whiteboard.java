@@ -11,11 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
-public class Whiteboard extends JFrame {
+public class Whiteboard {
+	private String name;
 	private Canvas canvas;
 	private ArrayList<String> users;
 	private ArrayList<LineSegment> segments;
-	private final JToggleButton eraserPicker;
 	
 	/**
 	 * Constructor for a whiteboard object
@@ -25,63 +25,76 @@ public class Whiteboard extends JFrame {
 	 * @param canvas The canvas associated with the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
-	public Whiteboard(String title, Canvas canvas, ArrayList<String> users) {
-		super(title);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout());
+	public Whiteboard(String name, Canvas canvas, ArrayList<String> users) {
+		this.name = name;
 		this.canvas = canvas;
 		this.users = users;
 		this.segments = new ArrayList<LineSegment>();
-		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
-        this.eraserPicker = new JToggleButton("eraser", eraserIcon, false);
-        eraserPicker.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent event) {
-        		if (getColor().equals(Color.WHITE)) {
-        			// TODO: Change this implementation later, but for demo purposes, this will suffice.
-        			setColor(Color.BLUE);
-        			setStrokeWidth(3);
-        		} else {
-        			setColor(Color.WHITE);
-        			setStrokeWidth(6);
-        		}
-        	}
-        });
-        this.add(canvas, BorderLayout.CENTER);
-        this.add(eraserPicker, BorderLayout.SOUTH);        
 	}
-        
-	/**
-	 * TODO: Change implementation later to attach color to user object
-	 * 		instead of attaching it to a canvas object.
-	 * @param color
-	 */
-    private void setColor(Color color) {
-    	this.canvas.setColor(color);
+        	
+    /**
+     * Returns the name of the whiteboard.
+     * @return the name of the whiteboard.
+     */
+    public String getName() {
+    	return this.name;
+    }
+
+    /**
+     * Sets the name of the whiteboard.
+     * @param name The name to set the whiteboard to.
+     */
+    public void setName(String name) {
+    	this.name = name;
     }
     
     /**
-     * Gets the color selected for the whiteboard.
-     * @return color selected for the whiteboard
+     * Returns the list of users currently in this whiteboard.
+     * @return the list of users currently in this whiteboard.
      */
-    private Color getColor() {
-    	return this.canvas.getColor();
+    public ArrayList<String> getUsers() {
+    	return this.users;
     }
     
-    private void setStrokeWidth(int strokeWidth) {
-    	this.canvas.setStrokeWidth(strokeWidth);
+    /**
+     * Adds user to the list of users
+     * @param user User to add
+     */
+    public void addUser(String user) {
+    	users.add(user);
     }
-	
+
+    /**
+     * Removes user from the list of users
+     * @param user User to remove
+     */
+    public void removeUser(String user) {
+    	for (int i = 0; i < users.size(); i++) {
+        	users.remove(i);
+    	}
+    }
+    
+    /**
+     * 
+     * @param lineSegment
+     */
+    public void addLineSegment(LineSegment lineSegment) {
+//    	this.canvas.setColor(lineSegment.getColor());
+//    	this.canvas.setStrokeWidth(lineSegment.getStrokeSize());
+//    	this.canvas.drawLineSegment();
+    }
+    
 	/**
 	 * Main method, which generates the GUI.
 	 */
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), 
-													   new ArrayList<String>());
-                whiteboard.pack();
-
-				whiteboard.setVisible(true);
+//				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), 
+//													   new ArrayList<String>());
+//                whiteboard.pack();
+//
+//				whiteboard.setVisible(true);
 			}
 		});
 	}	

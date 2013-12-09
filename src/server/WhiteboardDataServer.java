@@ -56,7 +56,7 @@ public class WhiteboardDataServer extends Thread {
 						if(whiteboards.containsKey(packetInfo[2])){
 							Whiteboard whiteboard = whiteboards.get(packetInfo[2]);
 							String newUser = packet.getUser();
-							users.get(newUser).offer(new Packet(createUserList(packetInfo[2]));
+							users.get(newUser).offer(new Packet(createUserList(packetInfo[2])));
 							whiteboard.addUser(newUser);
 							for(String user: whiteboard.getUsers()){
 								users.get(user).offer(new Packet("add whiteboard-user " + newUser));
