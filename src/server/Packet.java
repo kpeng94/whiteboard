@@ -1,18 +1,21 @@
 package server;
 
-import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 
 public class Packet {
-	private String user;
-	private String data;
-	private String whiteboard = null;
-	private Socket socketData = null;
-	private Boolean success = null;
+	private String user = null;
+	private String data = null;
+	private BlockingQueue<Packet> queueData = null;
 	private int type;
 	
 	public static int STRING_PACKET = 0;
-	public static int SOCKET_PACKET = 1;
-	public static int WHITEBOARD_PACKET = 2;
+	public static int QUEUE_PACKET = 1;
+	public static int SERVER_PACKET = 2;
+	
+	public Packet(String dataToSend){
+		data = dataToSend;
+		type = Packet.SERVER_PACKET;
+	}
 	
 	public Packet(String userName, String stringData){
 		user = userName;
@@ -20,18 +23,11 @@ public class Packet {
 		type = Packet.STRING_PACKET;
 	}
 	
-	public Packet(String userName, String stringData, Socket clientSocket){
+	public Packet(String userName, String stringData, BlockingQueue<Packet> clientQueue){
 		user = userName;
 		data = stringData;
-		socketData = clientSocket;
-		type = Packet.SOCKET_PACKET;
-	}
-	
-	public Packet(String userName, String whiteboardName, String stringData){
-		user = userName;
-		data = stringData;
-		whiteboard = whiteboardName;
-		type = Packet.WHITEBOARD_PACKET;
+		queueData = clientQueue;
+		type = Packet.QUEUE_PACKET;
 	}
 	
 	public String getUser(){
@@ -46,23 +42,7 @@ public class Packet {
 		return type;
 	}
 	
-	public Socket getSocketData(){
-		return socketData;
-	}
-	
-	public String getWhiteboard(){
-		return whiteboard;
-	}
-	
-	public Boolean getStatus(){
-		return success;
-	}
-	
-	public void processAsSuccess(){
-		success = true;
-	}
-	
-	public void processAsFailure(){
-		success = false;
+	public BlockingQueue<Packet> getQueue(){
+		return queueData;
 	}
 }

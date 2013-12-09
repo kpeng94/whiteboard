@@ -5,19 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class WhiteboardServerThread extends Thread {
-	private String whiteboardName = null;
 	private String userName = null;
 	private BlockingQueue<Packet> toServerQ;
+	private BlockingQueue<Packet> fromServerQ;
 	private Socket socket;
-	
+
 	public WhiteboardServerThread(Socket clientSocket, BlockingQueue<Packet> queueToServer){
 		socket = clientSocket;
 		toServerQ = queueToServer;
+		fromServerQ = new LinkedBlockingQueue<Packet>();
 	}
-	
+
 	/**
 	 * Handle a single client connection. Returns when client disconnects.
 	 * 
@@ -28,41 +31,52 @@ public class WhiteboardServerThread extends Thread {
 		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
 		try {
-			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				String[] commandArgs = line.split(" +");
-				// handles "add username" and "change username" requests
-				if(commandArgs[1].equals("username")){
-					Packet packet = new Packet(userName, line, socket);
-					toServerQ.add(packet);
-					// blocks until the packet is processed
-					while(packet.getStatus() != null){
-						;
+			while(true){
+				if(in.ready()){
+					String line = in.readLine();
+					String[] commandArgs = line.split(" +");
+					// handles username requests
+					if(line.contains("add username")){
+						Packet packet = new Packet(userName, line, fromServerQ);
+						toServerQ.add(packet);
 					}
-					if(packet.getStatus() == true){
-						userName = commandArgs[2];
+					// forward all other requests
+					else{
+						toServerQ.add(new Packet(userName, line));
+						if(commandArgs[0].equals("disconnect")){
+							break;
+						}
+					}
+				}
+				// handle responses back from the data server
+				if(!fromServerQ.isEmpty()){
+					Packet response = fromServerQ.take();
+					String responseString = response.getStringData();
+					if(responseString.contains("success username")){
+						String[] responseSplit = responseString.split(" ");
+						userName = responseSplit[2];
 						out.println("success username");
 					}
-					else{
-						out.println("retry username");
+					else if(responseString.contains("list whiteboard-user")){
+						out.println("success whiteboard join");
+						out.println(responseString);
 					}
-				}
-				else if(line.contains("draw")){
-					toServerQ.add(new Packet(userName, whiteboardName, line));
-				}
-				else{
-					toServerQ.add(new Packet(userName, line));
-					if(line.contains("disconnect") || line.contains("fail username")){
-						break;
+					else{
+						out.println(responseString);
 					}
 				}
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (SocketException e){
+			toServerQ.offer(new Packet(userName, "disconnect username " + userName));
 		} finally {
 			out.close();
 			in.close();
 			socket.close();
 		}
 	}
-	
+
 	/**
 	 * Starts the client thread.
 	 */
