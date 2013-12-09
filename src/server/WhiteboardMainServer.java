@@ -67,7 +67,7 @@ public class WhiteboardMainServer {
 	            }
 	        } catch (IllegalArgumentException iae) {
 	            System.err.println(iae.getMessage());
-	            System.err.println("usage: WhiteboardServer [--port PORT]");
+	            System.err.println("usage: WhiteboardMainServer [--port PORT]");
 	            return;
 	        }
 

@@ -29,7 +29,32 @@ public class WhiteboardServerThread extends Thread {
 
 		try {
 			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				//TODO: add parsing of incoming messages
+				String[] commandArgs = line.split(" +");
+				// handles "add username" and "change username" requests
+				if(commandArgs[1].equals("username")){
+					Packet packet = new Packet(userName, line, socket);
+					toServerQ.add(packet);
+					// blocks until the packet is processed
+					while(packet.getStatus() != null){
+						;
+					}
+					if(packet.getStatus() == true){
+						userName = commandArgs[2];
+						out.println("success username");
+					}
+					else{
+						out.println("retry username");
+					}
+				}
+				else if(line.contains("draw")){
+					toServerQ.add(new Packet(userName, whiteboardName, line));
+				}
+				else{
+					toServerQ.add(new Packet(userName, line));
+					if(line.contains("disconnect") || line.contains("fail username")){
+						break;
+					}
+				}
 			}
 		} finally {
 			out.close();
