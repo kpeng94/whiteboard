@@ -38,7 +38,17 @@ public class WhiteboardDataServer extends Thread {
 				}
 				else{
 					if(packetInfo[0].equals("disconnect")){
-						users.remove(packetInfo[2]);
+						String dcUser = packetInfo[2];
+						users.remove(dcUser);
+						for(Whiteboard whiteboard: whiteboards.values()){
+							if(whiteboard.getUsers().contains(packetInfo[2])){
+								whiteboard.removeUser(dcUser);
+								for(String user: whiteboard.getUsers()){
+									users.get(user).offer(new Packet("remove whiteboard-user " + dcUser));
+								}
+								break;
+							}
+						}
 					}
 					else if(packetInfo[0].equals("create")){
 						if(whiteboards.containsKey(packetInfo[2])){

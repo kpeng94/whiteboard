@@ -8,11 +8,11 @@ import java.util.List;
 public class User {
 
 	private Whiteboard whiteboard;
-	private int thickness;
+	private int thickness = 1;
 	private final String username;
-	private Color color;
+	private Color color = Color.BLACK;
 	
-	public User(String username, Whiteboard whiteboard, int thickness, Color color) {
+	public User(String username) {
 		this.username = username;
 		this.whiteboard = whiteboard;
 		this.thickness = thickness;
