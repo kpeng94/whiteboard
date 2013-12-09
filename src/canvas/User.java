@@ -8,9 +8,9 @@ import java.util.List;
 public class User {
 
 	private Whiteboard whiteboard;
-	private int thickness = 1;
+	private int thickness;
 	private final String username;
-	private Color color = Color.black;
+	private Color color;
 	
 	public User(String username, Whiteboard whiteboard, int thickness, Color color) {
 		this.username = username;
@@ -24,20 +24,9 @@ public class User {
 	 * @param r int from 0-255; defines red component
 	 * @param g int from 0-255; defines green component
 	 * @param b int from 0-255; defines blue component
-	 * @return boolean indicates if setColor was successful
 	 */
-	public boolean setColor(int r, int g, int b) {
-		if (r < 0 || r > 255) {
-			return false;
-		}
-		if (g < 0 || g > 255) {
-			return false;
-		}
-		if (b < 0 || b > 255) {
-			return false;
-		}
+	public void setColor(int r, int g, int b) {
 		color = new Color(r, g, b);
-		return true;
 	}
 	
 	/**
@@ -168,8 +157,8 @@ public class User {
 	 * @param board
 	 * @return String representing the message for creating a whiteboard
 	 */
-	public String createWhiteboard(Whiteboard board) {
-		return "create whiteboard " + board.getName();
+	public String createWhiteboard(String whiteboardName) {
+		return "create whiteboard " + whiteboardName;
 	}
 	
 	/**
@@ -182,11 +171,11 @@ public class User {
 	
 	/**
 	 * Sends a string in the form "join whiteboard [NAME]"
-	 * @param board
+	 * @param whiteboardName the name of the existing whiteboard
 	 * @return String representing the message for joining an existing whiteboard
 	 */
-	public String joinWhiteboard(Whiteboard board) {
-		return "join whiteboard " + board.getName();
+	public String joinWhiteboard(String whiteboardName) {
+		return "join whiteboard " + whiteboardName;
 	}
 	
 }
