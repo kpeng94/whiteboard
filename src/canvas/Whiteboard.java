@@ -53,7 +53,7 @@ public class Whiteboard {
      * @return the list of users currently in this whiteboard.
      */
     public ArrayList<String> getUsers() {
-    	return this.users;
+    	return new ArrayList<String>(this.users);
     }
     
     /**
@@ -69,9 +69,7 @@ public class Whiteboard {
      * @param user User to remove
      */
     public void removeUser(String user) {
-    	for (int i = 0; i < users.size(); i++) {
-        	users.remove(i);
-    	}
+        users.remove(user);
     }
     
     /**

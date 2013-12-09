@@ -34,9 +34,9 @@ public class WhiteboardServerThread extends Thread {
 			while(true){
 				if(in.ready()){
 					String line = in.readLine();
-					String[] commandArgs = line.split(" +");
+					String[] commandArgs = line.split(" ", 3);
 					// handles username requests
-					if(line.contains("add username")){
+					if(commandArgs[0].equals("add") && commandArgs[1].equals("username")){
 						Packet packet = new Packet(userName, line, fromServerQ);
 						toServerQ.add(packet);
 					}
@@ -52,8 +52,8 @@ public class WhiteboardServerThread extends Thread {
 				if(!fromServerQ.isEmpty()){
 					Packet response = fromServerQ.take();
 					String responseString = response.getStringData();
-					if(responseString.contains("success username")){
-						String[] responseSplit = responseString.split(" ");
+					String[] responseSplit = responseString.split(" ", 3);
+					if(responseSplit[0].equals("success") && responseSplit[1].equals("username")){
 						userName = responseSplit[2];
 						out.println("success username");
 					}
