@@ -1,14 +1,12 @@
 package canvas;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JToggleButton;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 public class Whiteboard {
@@ -82,17 +80,33 @@ public class Whiteboard {
 //    	this.canvas.drawLineSegment();
     }
     
+//    public void display() {
+//        JFrame window = new JFrame("Freehand Canvas");
+//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        window.setSize(1300, 1000);
+//        window.setLayout(new BorderLayout());
+//        
+//        // Add toolbar to the GUI
+//        JToolBar toolbar = new JToolBar("Bar");
+//        toolbar.setFloatable(false);
+//        JTable listOfUsers = new JTable();
+//    	JButton a = new JButton("WHO");
+//    	window.add(toolbar, BorderLayout.NORTH);
+//    	toolbar.add(a);
+//        window.setResizable(false);
+//        window.add(this.canvas, BorderLayout.CENTER);
+////        window.pack();
+//        window.setVisible(true);
+//    }
+    
 	/**
 	 * Main method, which generates the GUI.
 	 */
 	public static void main(final String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-//				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), 
-//													   new ArrayList<String>());
-//                whiteboard.pack();
-//
-//				whiteboard.setVisible(true);
+				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), new ArrayList<String>());
+//				whiteboard.display();
 			}
 		});
 	}	
