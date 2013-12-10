@@ -1,16 +1,12 @@
 package canvas;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import server.Packet;
 
 public class ClientThread extends Thread {
 	private Socket socket;
@@ -23,13 +19,15 @@ public class ClientThread extends Thread {
 	private Whiteboard whiteboard;
 	// users associated with current whiteboard
 	private ArrayList<String> whiteboardUsers = whiteboard.getUsers();
-	private LinkedBlockingQueue<String> incomingQueue; 
+	
+	// for initializing a canvas
+	private final int width = 800;
+	private final int height = 600;
 	
 	private PrintWriter outOut;
 
 	public ClientThread(Socket clientSocket){
 		socket = clientSocket;
-		incomingQueue = new LinkedBlockingQueue<String>();
 		try {
 			handleConnection();
 		} catch (IOException e) {
@@ -53,8 +51,9 @@ public class ClientThread extends Thread {
         	public void run() {
         		try {
         			for (String input = in.readLine(); input != null; input = in.readLine()) {
+        				// maybe just calling handleMessage(input) is enough to process the message
+        				// then get rid of the String output that handleMessages(input) currently returns.
         				String output = handleMessages(input);
-        				//process the in;
         			}
         		} catch (IOException e) {
         			e.printStackTrace();
@@ -69,6 +68,36 @@ public class ClientThread extends Thread {
 	}
 	
 	//create methods for sending shit
+	public void sendAddUsernameMessage(String username) {
+		String message = "add username " + username;
+		outOut.println(message);
+	}
+	public void sendDisconnectUsernameMessage() {
+		String message = "disconnect username " + userName;
+		outOut.println(message);
+	}
+	public void sendCreateWhiteboardMessage(String name) {
+		String message = "create whiteboard " + name;
+		outOut.println(message);
+	}
+	public void sendJoinWhiteboardMessage(String name) {
+		String message = "join whiteboard " + name;
+		outOut.println(message);
+	}
+	
+	public void sendExitWhiteboardMessage() {
+		String message = "exit whiteboard " + whiteboard.getName();
+		outOut.println(message);
+	}
+	
+	public void sendDrawMessage(int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
+		// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
+		// [red] [green] [blue] [stroke size]
+		String message = "draw whiteboard " + whiteboard.getName() + " " + String.valueOf(x1) + " " + String.valueOf(y1) + " "
+						+ String.valueOf(x2) + " " + String.valueOf(y2) + " " + String.valueOf(r) + " " + String.valueOf(g)
+						+ " " + String.valueOf(b) + " " + String.valueOf(strokeSize);
+		outOut.println(message);	
+	}	
 	
 	/**
      * Handler for client input, performing requested operations and returning an output message.
@@ -89,7 +118,7 @@ public class ClientThread extends Thread {
 		// handles username requests
 		if(commandArgs[0].equals("success") && commandArgs[1].equals("username")){
 			User user = new User(commandArgs[2]);	
-			return "success username";		
+			return "success";		
 		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
 			// use simpleDialogGUI
 			return "retry username";
@@ -101,18 +130,18 @@ public class ClientThread extends Thread {
 					for (int i = 2; i < commandArgs.length; i++) {
 						newWhiteboardNames.add(commandArgs[i]);
 					}
-					whiteboardNames = newWhiteboardNames;
-					return "list of whiteboards updated";
+					setWhiteboardNames(newWhiteboardNames);
+					return "success";
 				} else if (commandArgs[0].equals("list") && commandArgs[0].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newUserList.add(commandArgs[i]);
 					}
 					whiteboardUsers = newUserList;
-					return "list of whiteboard users updated";
+					return "success";
 				} else if (commandArgs[0].equals("add")) {
 					whiteboardUsers.add(commandArgs[2]);
-					return "user added";
+					return "success";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
 					// (retry whiteboard naming)
 					// use simpleDialogGUI
@@ -122,21 +151,36 @@ public class ClientThread extends Thread {
 					int index = whiteboardUsers.indexOf(usernameToRemove);
 					if (index != -1) {
 						whiteboardUsers.remove(index);
-						return "user removed";
+						return "success";
 					}
-					return "failed to remove";			
+					return "fail";			
 				} else if (commandArgs[0].equals("error")) {
-					// (error whiteboard)
 					return "error";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
-					// success whiteboard join [WHITEBOARD]
-					return "success join";
+					Canvas canvas = new Canvas(width, height);
+					ArrayList<String> initialUsers = new ArrayList<String>();
+					whiteboard = new Whiteboard(commandArgs[2], canvas, initialUsers);
+					return "success";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
-					// (success whiteboard exit)
-					return "success exit";
+					whiteboard = null;
+					return "success";
 				} else if (commandArgs[0].equals("draw")) {
-					// (draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
-					// [red] [green] [blue] [stroke size])
+					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
+					// [red] [green] [blue] [stroke size]
+					if (whiteboard != null) {
+						int x1 = Integer.parseInt(commandArgs[3]);
+						int y1 = Integer.parseInt(commandArgs[4]);
+						int x2 = Integer.parseInt(commandArgs[5]);
+						int y2 = Integer.parseInt(commandArgs[6]);
+						Color color = new Color(Integer.parseInt(commandArgs[7]), Integer.parseInt(commandArgs[8]), Integer.parseInt(commandArgs[9]));
+						int strokeSize = Integer.parseInt(commandArgs[10]);
+						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
+						whiteboard.addLineSegment(lineSegment);
+						return "success";
+					} else {
+						return "no whiteboard";
+					}
+					
 				}
 			}
         // Should never get here--make sure to return in each of the valid cases above.
@@ -144,13 +188,6 @@ public class ClientThread extends Thread {
 		}
     }
     
-    /*
-    public String sendMessage(String message) {
-    	
-    }
-    */
-	
-
 	/**
 	 * Starts the client thread.
 	 */
@@ -161,5 +198,14 @@ public class ClientThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getWhiteboardNames() {
+		return (ArrayList<String>) whiteboardNames.clone();
+	}
+
+	public void setWhiteboardNames(ArrayList<String> whiteboardNames) {
+		this.whiteboardNames = whiteboardNames;
 	}
 }
