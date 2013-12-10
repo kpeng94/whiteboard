@@ -25,18 +25,18 @@ public class WhiteboardDataServer extends Thread {
 	private void handleMessages(){
 		try {
 			for(Packet packet = in.take(); packet != null; packet = in.take()){
-				String request = packet.getStringData();
-				String[] packetInfo = packet.getStringData().split(" ", 3);
+				String request = packet.getStringData().trim();
+				String[] packetInfo = packet.getStringData().split(" ");
 
 				if(packet.getType() == Packet.QUEUE_PACKET){
-					String newUserName = packetInfo[2].toLowerCase(Locale.ENGLISH);
-					if(users.containsKey(newUserName)){
-						packet.getQueue().offer(new Packet("retry username"));
+					if(packetInfo.length != 3 || users.containsKey(packetInfo[2].toLowerCase(Locale.ENGLISH))){
+						packet.getQueue().offer(new Packet(false, "retry username"));
 					}
 					else{
+						String newUserName = packetInfo[2].toLowerCase(Locale.ENGLISH);
 						users.put(newUserName, packet.getQueue());
-						packet.getQueue().offer(new Packet("success username " + newUserName));
-						packet.getQueue().offer(new Packet(createWhiteboardList()));
+						packet.getQueue().offer(new Packet(false, "success username " + newUserName));
+						packet.getQueue().offer(new Packet(false, createWhiteboardList()));
 					}
 				}
 				else{
@@ -47,37 +47,37 @@ public class WhiteboardDataServer extends Thread {
 							if(whiteboard.getUsers().contains(dcUser)){
 								whiteboard.removeUser(dcUser);
 								for(String user: whiteboard.getUsers()){
-									users.get(user).offer(new Packet("remove whiteboard-user " + dcUser));
+									users.get(user).offer(new Packet(false, "remove whiteboard-user " + dcUser));
 								}
 								break;
 							}
 						}
 					}
 					else if(packetInfo[0].equals("create")){
-						String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
-						if(whiteboards.containsKey(whiteboardName)){
-							users.get(packet.getUser()).offer(new Packet("retry whiteboard naming"));
+						if(packetInfo.length != 3 || whiteboards.containsKey(packetInfo[2].toLowerCase(Locale.ENGLISH))){
+							users.get(packet.getUser()).offer(new Packet(false, "retry whiteboard naming"));
 						}
 						else{
+							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
 							whiteboards.put(whiteboardName, new Whiteboard(packetInfo[2], new Canvas(800,600), new ArrayList<String>()));
 							for(BlockingQueue<Packet> bq: users.values()){
-								bq.offer(new Packet(createWhiteboardList()));
+								bq.offer(new Packet(false, createWhiteboardList()));
 							}
 						}
 					}
 					else if(packetInfo[0].equals("join")){
-						String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
-						if(whiteboards.containsKey(whiteboardName)){
+						if(packetInfo.length == 3 && whiteboards.containsKey(packetInfo[2].toLowerCase(Locale.ENGLISH))){
+							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);							
 							Whiteboard whiteboard = whiteboards.get(whiteboardName);
 							String newUser = packet.getUser();
-							users.get(newUser).offer(new Packet(createUserList(whiteboardName)));
+							users.get(newUser).offer(new Packet(false, createUserList(whiteboardName)));
 							whiteboard.addUser(newUser);
 							for(String user: whiteboard.getUsers()){
-								users.get(user).offer(new Packet("add whiteboard-user " + newUser));
+								users.get(user).offer(new Packet(false, "add whiteboard-user " + newUser));
 							}
 						}
 						else{
-							users.get(packet.getUser()).offer(new Packet("error whiteboard"));
+							users.get(packet.getUser()).offer(new Packet(false, "error whiteboard"));
 						}
 					}
 					else if(packetInfo[0].equals("exit")){
@@ -86,7 +86,7 @@ public class WhiteboardDataServer extends Thread {
 						String exitUser = packet.getUser();
 						whiteboard.removeUser(exitUser);
 						for(String user: whiteboard.getUsers()){
-							users.get(user).offer(new Packet("remove whiteboard-user " + exitUser));
+							users.get(user).offer(new Packet(false, "remove whiteboard-user " + exitUser));
 						}
 					}
 					else if(packetInfo[0].equals("draw")){
@@ -99,7 +99,7 @@ public class WhiteboardDataServer extends Thread {
 								color, Integer.parseInt(packetInfo[10]));
 						whiteboard.addLineSegment(lineSeg);
 						for(String user: whiteboard.getUsers()){
-							users.get(user).offer(new Packet(request));
+							users.get(user).offer(new Packet(false, request));
 						}
 					}
 				}

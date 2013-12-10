@@ -8,19 +8,25 @@ public class Packet {
 	private BlockingQueue<Packet> queueData = null;
 	private int type;
 	
-	public static int STRING_PACKET = 0;
+	public static int FORWARD_PACKET = 0;
 	public static int QUEUE_PACKET = 1;
 	public static int SERVER_PACKET = 2;
+	public static int NORMAL_PACKET = 3;
 	
-	public Packet(String dataToSend){
-		data = dataToSend;
-		type = Packet.SERVER_PACKET;
+	public Packet(boolean fromClient, String stringData){
+		data = stringData;
+		if(fromClient){
+			type = Packet.FORWARD_PACKET;
+		}
+		else{
+			type = Packet.SERVER_PACKET;
+		}
 	}
 	
 	public Packet(String userName, String stringData){
-		user = userName;
 		data = stringData;
-		type = Packet.STRING_PACKET;
+		user = userName;
+		type = Packet.NORMAL_PACKET;
 	}
 	
 	public Packet(String userName, String stringData, BlockingQueue<Packet> clientQueue){
