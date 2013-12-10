@@ -30,7 +30,7 @@ public class LoginGUI extends JFrame {
 		loginText = new JLabel("Log into the whiteboard server.");
 		displayIP = new JLabel("Server IP");
 		displayPort = new JLabel("Server Port");
-		displayUserName = new JLabel("User Name");
+		displayUserName = new JLabel("Username");
 		typeIP = new JTextField("localhost");
 		typePort = new JTextField("4444");
 		typeUserName = new JTextField("");
@@ -47,7 +47,7 @@ public class LoginGUI extends JFrame {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		
-		layout.setHorizontalGroup(layout.createParallelGroup()
+		layout.setHorizontalGroup(layout.createParallelGroup(Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup().addComponent(loginText))
 				.addGroup(layout.createSequentialGroup().addComponent(displayIP).addComponent(typeIP))
 				.addGroup(layout.createSequentialGroup().addComponent(displayPort).addComponent(typePort))
