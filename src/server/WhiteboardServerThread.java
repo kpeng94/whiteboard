@@ -67,15 +67,8 @@ public class WhiteboardServerThread extends Thread {
 				else if(response.getType() == Packet.SERVER_PACKET){
 					if(responseSplit[0].equals("success") && responseSplit[1].equals("username")){
 						userName = responseSplit[2];
-						out.println("success username");
 					}
-					else if(responseString.contains("list whiteboard-user")){
-						out.println("success whiteboard join");
-						out.println(responseString);
-					}
-					else{
-						out.println(responseString);
-					}
+					out.println(responseString);
 				}
 			}
 		} catch (InterruptedException e) {

@@ -70,6 +70,7 @@ public class WhiteboardDataServer extends Thread {
 							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);							
 							Whiteboard whiteboard = whiteboards.get(whiteboardName);
 							String newUser = packet.getUser();
+							users.get(newUser).offer(new Packet(false, "success whiteboard join " + whiteboardName));
 							users.get(newUser).offer(new Packet(false, createUserList(whiteboardName)));
 							whiteboard.addUser(newUser);
 							for(String user: whiteboard.getUsers()){
@@ -85,6 +86,7 @@ public class WhiteboardDataServer extends Thread {
 						Whiteboard whiteboard = whiteboards.get(whiteboardName);
 						String exitUser = packet.getUser();
 						whiteboard.removeUser(exitUser);
+						users.get(exitUser).offer(new Packet(false, "success whiteboard exit"));
 						for(String user: whiteboard.getUsers()){
 							users.get(user).offer(new Packet(false, "remove whiteboard-user " + exitUser));
 						}
