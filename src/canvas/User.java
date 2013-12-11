@@ -170,4 +170,7 @@ public class User {
 		return "join whiteboard " + whiteboardName;
 	}
 	
+	public Whiteboard getWhiteboard() {
+		return this.whiteboard;
+	}
 }
