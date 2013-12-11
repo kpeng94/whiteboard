@@ -61,6 +61,7 @@ public class Whiteboard {
 		return new HashSet<String>(this.users);
 	}
 
+	// TODO setUsers doesn't replace list of users; adds to it (which one do we want?)
 	/**
 	 * Replaces users of whiteboard with new list of users
 	 */
