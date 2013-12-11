@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+@SuppressWarnings("serial")
 public class WhiteboardListGUI extends JFrame {
 	
 	private final JScrollPane scrollPane;

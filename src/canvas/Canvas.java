@@ -33,6 +33,7 @@ import javax.swing.table.TableColumn;
  * Canvas represents a drawing surface that allows the user to draw
  * on it freehand, with the mouse.
  */
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Image drawingBuffer;

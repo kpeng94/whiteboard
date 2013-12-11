@@ -11,9 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+@SuppressWarnings("serial")
 public class SimplePromptGUI extends JFrame {
-
-	private static final long serialVersionUID = -2082025637887191666L;
 	
 	private final JLabel promptText;
 	private final JLabel message;
@@ -52,6 +51,7 @@ public class SimplePromptGUI extends JFrame {
 		
 		inputName = new JTextField();
 		ok = new JButton("OK");
+		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");
 		cancel.addActionListener(new CancelListener());
 		setResizable(false);
@@ -80,9 +80,24 @@ public class SimplePromptGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			SimplePromptGUI.this.setVisible(false);
+			if(type == SimplePromptGUI.REPROMPT_USERNAME){
+				System.exit(0);
+			}
 			SimplePromptGUI.this.dispose();
 		}	
 	}
 	
-	//TODO: Add a Listener for the "OK" button.
+	private class OKListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg){
+			if(type == SimplePromptGUI.REPROMPT_USERNAME){
+				client.sendAddUsernameMessage(inputName.getText());
+			}
+			else if(type == SimplePromptGUI.PROMPT_WHITEBOARD || type == SimplePromptGUI.REPROMPT_WHITEBOARD){
+				client.sendCreateWhiteboardMessage(inputName.getText());
+			}
+			SimplePromptGUI.this.setVisible(false);
+			SimplePromptGUI.this.dispose();
+		}
+	}
 }
