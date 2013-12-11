@@ -72,15 +72,15 @@ public class SimplePromptGUI extends JFrame {
 				.addGroup(layout.createParallelGroup().addComponent(ok).addComponent(cancel)));
 		
 		pack();
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
 	private class CancelListener implements ActionListener{
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			SimplePromptGUI.super.setVisible(false);
-			SimplePromptGUI.super.dispose();
+			SimplePromptGUI.this.setVisible(false);
+			SimplePromptGUI.this.dispose();
 		}	
 	}
 	

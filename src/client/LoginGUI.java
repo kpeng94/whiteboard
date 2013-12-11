@@ -62,15 +62,15 @@ public class LoginGUI extends JFrame {
 				.addGroup(layout.createParallelGroup().addComponent(ok).addComponent(cancel)));
 		
 		pack();
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
 	private class CancelListener implements ActionListener{
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			LoginGUI.super.setVisible(false);
-			LoginGUI.super.dispose();
+			LoginGUI.this.setVisible(false);
+			LoginGUI.this.dispose();
 		}	
 	}
 	
