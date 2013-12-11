@@ -5,28 +5,32 @@ import canvas.Whiteboard;
 
 public class User {
 
-	private HashMap<String, Whiteboard> whiteboard;
+	private HashMap<String, Whiteboard> whiteboards;
 	private final String username;
 	
+	/**
+	 * Constructor for user.
+	 * @param username Username for the user
+	 */
 	public User(String username) {
 		this.username = username;
-		this.whiteboard = new HashMap<String, Whiteboard>();
+		this.whiteboards = new HashMap<String, Whiteboard>();
 	}
 	
 	/**
 	 * Returns the username of this user 
-	 * @return username
+	 * @return username of this user
 	 */
 	public String getUsername() {
 		return this.username;
 	}
 	
 	/**
-	 * 
-	 * @param whiteboard
+	 * Adds a whiteboard for this user.
+	 * @param whiteboard Whiteboard to add
 	 */
 	public void addWhiteboard(Whiteboard whiteboard) {
-		this.whiteboard.put(whiteboard.getName(), whiteboard);
+		this.whiteboards.put(whiteboard.getName(), whiteboard);
 	}
 	
 	/**
@@ -35,14 +39,13 @@ public class User {
 	 * @return whiteboard with given name.
 	 */
 	public Whiteboard getWhiteboard(String name){
-		return this.whiteboard.get(name);
+		return this.whiteboards.get(name);
 	}
-	
 	/**
-	 * Removes a whiteboard from this user.
+	 * Removes a whiteboard from this user's list.
 	 * @param name Name of whiteboard to remove.
 	 */
 	public void removeWhiteboard(String name){
-		this.whiteboard.remove(name);
+		this.whiteboards.remove(name);
 	}
 }
