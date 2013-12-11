@@ -21,7 +21,6 @@ public class Whiteboard {
 	/**
 	 * Constructor for a new whiteboard object
 	 * @param title Name of the whiteboard
-	 * @param canvas The canvas associated with the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
 	public Whiteboard(String name, ArrayList<String> users) {
