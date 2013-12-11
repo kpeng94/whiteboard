@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -43,6 +44,8 @@ public class WhiteboardListGUI extends JFrame {
 			}
 		};
 		scrollPane = new JScrollPane(table);
+		table.setShowGrid(false);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		setResizable(false);
 		setTitle("Whiteboards");

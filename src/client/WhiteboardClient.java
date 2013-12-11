@@ -124,9 +124,9 @@ public class WhiteboardClient{
 		// handles username requests
 		if(commandArgs[0].equals("success") && commandArgs[1].equals("username")){
 			user = new User(commandArgs[2]);
-			WhiteboardListGUI whiteboardList = new WhiteboardListGUI(this);
-			whiteboardList.setTitle("Whiteboard - Logged in as: " + commandArgs[2]);	
-			whiteboardList.setVisible(true);
+			mainGUI = new WhiteboardListGUI(this);
+			mainGUI.setTitle("Whiteboard - Logged in as: " + commandArgs[2]);	
+			mainGUI.setVisible(true);
 			
 			return "success";
 		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
@@ -142,6 +142,7 @@ public class WhiteboardClient{
 						newWhiteboardNames.add(commandArgs[i]);
 					}
 					setWhiteboardNames(newWhiteboardNames);
+					mainGUI.updateTable(newWhiteboardNames);
 					return "success";
 				} else if (commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
@@ -154,8 +155,8 @@ public class WhiteboardClient{
 					whiteboardUsers.add(commandArgs[2]);
 					return "success";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
-					// (retry whiteboard naming)
-					// use simpleDialogGUI
+					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
+					newWhiteboard.setVisible(true);
 					return "retry whiteboard";
 				} else if (commandArgs[0].equals("remove")) {
 					String usernameToRemove = commandArgs[2];
