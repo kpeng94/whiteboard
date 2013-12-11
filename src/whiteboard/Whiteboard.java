@@ -20,8 +20,7 @@ public class Whiteboard {
 
 	/**
 	 * Constructor for a new whiteboard object
-	 * @param title Name of the whiteboard
-	 * @param users The list of users who are currently accessing this whiteboard
+	 * @param name Name of the whiteboard
 	 */
 	public Whiteboard(String name) {
 		this.name = name;
@@ -33,9 +32,8 @@ public class Whiteboard {
 	
 	/**
 	 * Constructor for a new whiteboard object
-	 * @param title Name of the whiteboard
+	 * @param name Name of the whiteboard
 	 * @param canvas The canvas associated with the whiteboard
-	 * @param users The list of users who are currently accessing this whiteboard
 	 */
 	public Whiteboard(String name, Canvas canvas) {
 		this.name = name;

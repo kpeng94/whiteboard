@@ -2,8 +2,6 @@ package client;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 import whiteboard.Whiteboard;
@@ -40,8 +38,7 @@ public class UserTest {
 	@Test
 	public void testAddWhiteboardExists() {
 		User user = new User("username");
-		ArrayList<String> usersAlreadyInWhiteboard = new ArrayList<String>(){};
-		Whiteboard whiteboard = new Whiteboard("whiteboard", usersAlreadyInWhiteboard);
+		Whiteboard whiteboard = new Whiteboard("whiteboard");
 		user.addWhiteboard(whiteboard);
 		assertEquals(user.getWhiteboard("whiteboard") != null, true);
 	}
@@ -52,8 +49,7 @@ public class UserTest {
 	@Test
 	public void testRemoveWhiteboard() {
 		User user = new User("username");
-		ArrayList<String> usersAlreadyInWhiteboard = new ArrayList<String>(){};
-		Whiteboard whiteboard = new Whiteboard("whiteboard", usersAlreadyInWhiteboard);
+		Whiteboard whiteboard = new Whiteboard("whiteboard");
 		user.addWhiteboard(whiteboard);
 		user.removeWhiteboard("whiteboard");
 		assertEquals(user.getWhiteboard("whiteboard") == null, true);
