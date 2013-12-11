@@ -14,7 +14,7 @@ import client.Canvas;
  * Types of strings to test: empty string, special characters, normal names
  *
  */
-public class whiteboardTest {
+public class WhiteboardTest {
 	@Test
 	public void testGetName() {
 		int width = 800; int height = 600;
