@@ -20,6 +20,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * This is the GUI for displaying the whiteboard. 
+ */
 @SuppressWarnings("serial")
 public class WhiteboardGUI extends JFrame {
 	
@@ -31,6 +34,10 @@ public class WhiteboardGUI extends JFrame {
 	private final JTable table;
 	private final JScrollPane scrollPane;
 	
+	/**
+	 * Constructor for whiteboard GUI
+	 * @param canvas The canvas to display in the GUI
+	 */
 	public WhiteboardGUI(final Canvas canvas){
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,14 +63,16 @@ public class WhiteboardGUI extends JFrame {
 		toolbar.add(colorButton);
 		colorButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				Color color = JColorChooser.showDialog(WhiteboardGUI.this, "Choose Background Color", Color.WHITE);
+				Color color = JColorChooser.showDialog(WhiteboardGUI.this, 
+													   "Choose Background Color", 
+													   Color.WHITE);
 				if (color != null) {
 					canvas.setColor(color);
 				}
 			}
 		});
 
-		// Eraser Icon
+		// Add eraser icon
 		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
 		eraserPicker = new JToggleButton("eraser", eraserIcon, false);
 		toolbar.add(eraserPicker);
@@ -73,6 +82,7 @@ public class WhiteboardGUI extends JFrame {
 			}            	
 		});
 
+		// Add stroke slider
 		strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
 		toolbar.add(strokeSlider);
 		strokeSlider.addChangeListener(new ChangeListener() {
@@ -105,10 +115,18 @@ public class WhiteboardGUI extends JFrame {
 		setVisible(true);
 	}
 	
+	/**
+	 * Adds a user entry to the user table model
+	 * @param user User to add
+	 */
 	public void addUserToModel(String user){
 		tableModel.addRow(new Object[]{user});
 	}
-	
+
+	/**
+	 * Removes a user entry to the user table model
+	 * @param user User to remove
+	 */
 	public void removeUserFromModel(String user){
 		for(int i = 0; i < tableModel.getRowCount(); i++){
 			if(((String)tableModel.getValueAt(i, 0)).equals(user)){

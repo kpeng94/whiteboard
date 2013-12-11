@@ -119,6 +119,9 @@ public class Whiteboard {
 		return this.lineSegments;
 	}
 
+	/**
+	 * Displays the whiteboard.
+	 */
 	public void display() {
 		gui = new WhiteboardGUI(canvas);
 	}
