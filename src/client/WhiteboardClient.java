@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import canvas.Canvas;
 import canvas.LineSegment;
@@ -155,7 +156,7 @@ public class WhiteboardClient{
 					mainGUI.updateTable(newWhiteboardNames);
 				} else if (request[0].equals("list") && 
 						request[1].equals("whiteboard-user")) {
-					ArrayList<String> newUserList = new ArrayList<String>();
+					HashSet<String> newUserList = new HashSet<String>();
 					for (int i = 3; i < request.length; i++) {
 						newUserList.add(request[i]);
 					}
