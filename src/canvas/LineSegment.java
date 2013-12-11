@@ -64,6 +64,7 @@ public class LineSegment {
 	
 	/**
 	 * Returns a String representation of the line segment
+	 * @return string representation of line segment
 	 */
 	public String toString(){
 		return start.x + " " + start.y + " " + end.x + " " + end.y + " " + color.getRed() + " "
