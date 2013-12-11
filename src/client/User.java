@@ -5,8 +5,7 @@ import java.util.HashMap;
 import whiteboard.Whiteboard;
 
 /**
- * TODO: describe the ADT, RI
- *
+ * Represents a user 
  */
 public class User {
 
