@@ -3,6 +3,10 @@ package client;
 import java.util.HashMap;
 import canvas.Whiteboard;
 
+/**
+ * TODO: describe the ADT, RI
+ *
+ */
 public class User {
 
 	private HashMap<String, Whiteboard> whiteboards;
@@ -38,14 +42,15 @@ public class User {
 	 * @param name Name of whiteboard to get.
 	 * @return whiteboard with given name.
 	 */
-	public Whiteboard getWhiteboard(String name){
+	public Whiteboard getWhiteboard(String name) {
 		return this.whiteboards.get(name);
 	}
+	
 	/**
 	 * Removes a whiteboard from this user's list.
 	 * @param name Name of whiteboard to remove.
 	 */
-	public void removeWhiteboard(String name){
+	public void removeWhiteboard(String name) {
 		this.whiteboards.remove(name);
 	}
 }

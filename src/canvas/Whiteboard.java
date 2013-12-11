@@ -3,6 +3,10 @@ package canvas;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * TODO: ADT, RI
+ *
+ */
 public class Whiteboard {
 	private String name;
 	private HashSet<String> users;
