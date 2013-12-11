@@ -150,7 +150,9 @@ public class Canvas extends JPanel {
     	}
         final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         g.setColor(lineSegment.getColor());
-        g.setStroke(new BasicStroke(lineSegment.getStrokeSize()));
+        g.setStroke(new BasicStroke(lineSegment.getStrokeSize(), 
+        							BasicStroke.CAP_ROUND, 
+        							BasicStroke.JOIN_ROUND));
         g.drawLine(lineSegment.getStartPoint().x, lineSegment.getStartPoint().y,
         		   lineSegment.getEndPoint().x, lineSegment.getEndPoint().y);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we

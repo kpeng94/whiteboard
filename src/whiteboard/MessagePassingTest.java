@@ -33,6 +33,9 @@ public class MessagePassingTest {
     	    out.println("add username parker");
     	    assertEquals("success username parker", TestUtil.nextNonEmptyLine(in));
     	    assertEquals("list whiteboard", TestUtil.nextNonEmptyLine(in));
+    	    
+    	    out.println("add username parker");
+    	    assertEquals("retry username", TestUtil.nextNonEmptyLine(in));
 
     	    out.println("create whiteboard whiteboardone");
       	    assertEquals("add whiteboard whiteboardone", TestUtil.nextNonEmptyLine(in));
