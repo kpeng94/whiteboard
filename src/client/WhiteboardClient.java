@@ -15,7 +15,6 @@ import canvas.Whiteboard;
 
 public class WhiteboardClient{
 	private final Socket socket;
-	private String userName = null;
 	// User must be created (become non-null) following a "success username" 
 	private User user = null;
 	// list of all available whiteboard names
@@ -25,6 +24,7 @@ public class WhiteboardClient{
 	// users associated with current whiteboard
 	private ArrayList<String> whiteboardUsers;
 	private WhiteboardClientMain handler;
+	private WhiteboardListGUI mainGUI;
 
 	// for initializing a canvas
 	private final int width = 800;
@@ -64,7 +64,7 @@ public class WhiteboardClient{
 						System.out.println(output);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					;
 				}
 			}
 		});
@@ -78,14 +78,14 @@ public class WhiteboardClient{
 		printServer.println(message);
 	}
 	public void sendDisconnectUsernameMessage() {
-		String message = "disconnect username " + userName;
+		String message = "disconnect username " + user.getUsername();
 		printServer.println(message);
 		try {
 			printServer.close();
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			;
 		}
 		System.exit(0);
 	}

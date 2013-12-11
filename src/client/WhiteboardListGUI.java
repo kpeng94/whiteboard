@@ -2,6 +2,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ public class WhiteboardListGUI extends JFrame {
 		createWhiteboard.addActionListener(new WhiteboardCreateListener());
 		ok = new JButton("Select Whiteboard");
 		logout = new JButton("Logout");
+		logout.addActionListener(new LogoutListener());
 		
 		model = new DefaultTableModel(new Object[]{"Whiteboard Name"}, 0);
 		table = new JTable(model){
@@ -61,6 +63,13 @@ public class WhiteboardListGUI extends JFrame {
 				.addGroup(layout.createParallelGroup().addComponent(createWhiteboard).addComponent(ok).addComponent(logout)));
 		
 		pack();
+	}
+	
+	public void updateTable(ArrayList<String> users){
+		model.setRowCount(0);
+		for(String s: users){
+			model.addRow(new Object[]{s});
+		}
 	}
 	
 	private class WhiteboardCreateListener implements ActionListener{
