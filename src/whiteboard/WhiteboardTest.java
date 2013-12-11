@@ -126,7 +126,6 @@ public class WhiteboardTest {
 	}
 	
 	// tests adding and getting a line segment
-	// TODO got nullPointerException when canvas != null; possible rep invariant?
 	@Test
 	public void testAddGetLineSegment() {
 		Canvas canvas = null;
@@ -138,7 +137,5 @@ public class WhiteboardTest {
 		assertEquals(lineSegments, whiteboard.getLineSegments());
 		
 	}
-	
-	//TODO display() test?
 
 }
