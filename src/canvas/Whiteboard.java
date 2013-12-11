@@ -3,6 +3,8 @@ package canvas;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import client.WhiteboardGUI;
+
 /**
  * TODO: ADT, RI
  *
@@ -48,14 +50,6 @@ public class Whiteboard {
 	 */
 	public String getName() {
 		return this.name;
-	}
-
-	/**
-	 * Sets the name of the whiteboard.
-	 * @param name The name to set the whiteboard to.
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**

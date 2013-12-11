@@ -14,18 +14,12 @@ import org.junit.Test;
  */
 public class whiteboardTest {
 	@Test
-	public void testGetSetName() {
+	public void testGetName() {
 		int width = 800; int height = 600;
 		Canvas canvas = new Canvas(width, height);
 		ArrayList<String> users = new ArrayList<String>();
-		Whiteboard whiteboard = new Whiteboard("", canvas, users);
-		assertEquals("", whiteboard.getName());
-		
-		whiteboard.setName("name");
-		assertEquals("name", whiteboard.getName());
-		
-		whiteboard.setName(" ");
-		assertEquals(" ", whiteboard.getName());
+		Whiteboard whiteboard = new Whiteboard("testName", canvas, users);
+		assertEquals("testName", whiteboard.getName());
 	}
 	
 	@Test

@@ -56,7 +56,7 @@ public class WhiteboardClient{
 						handleMessages(input);
 					}
 				} catch (IOException e) {
-					
+					e.printStackTrace();
 				}
 			}
 		});
@@ -81,7 +81,7 @@ public class WhiteboardClient{
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 		System.exit(0);
 	}
