@@ -62,14 +62,14 @@ public class Whiteboard {
 	 * Returns the list of users currently in this whiteboard.
 	 * @return the list of users currently in this whiteboard.
 	 */
-	public ArrayList<String> getUsers() {
-		return new ArrayList<String>(this.users);
+	public HashSet<String> getUsers() {
+		return new HashSet<String>(this.users);
 	}
 
 	/**
 	 * Replaces users of whiteboard with new list of users
 	 */
-	public void setUsers(ArrayList<String> newUsers) {
+	public void setUsers(HashSet<String> newUsers) {
 		for(String user: newUsers){
 			addUser(user);
 		}

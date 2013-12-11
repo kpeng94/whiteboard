@@ -2,11 +2,7 @@ package client;
 
 import static org.junit.Assert.*;
 
-import java.awt.Color;
-
 import org.junit.Test;
-
-import canvas.Whiteboard;
 
 /**
  * Tests constructor and methods for the User ADT.
