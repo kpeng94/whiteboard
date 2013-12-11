@@ -12,7 +12,7 @@ import client.Canvas;
 
 /**
  * Tests that methods of the whiteboard ADT function correctly.
- * Methods to test: getName(), addUsers(), getUsers(), removeUser(), setUsers(), addLineSegments(), getLineSegment(), display()?
+ * Methods to test: getName(), addUsers(), getUsers(), removeUser(), setUsers(), addLineSegments(), getLineSegment()
  * Types of strings to test: empty string, special characters, normal names
  *
  */
@@ -79,22 +79,21 @@ public class WhiteboardTest {
 			int height = 600;
 			Canvas canvas = new Canvas(width, height);
 			Whiteboard whiteboard = new Whiteboard("", canvas);
-			whiteboard.addUser("genghis");
+			whiteboard.addUser("hi");
 			whiteboard.addUser("kevin");
 			whiteboard.addUser(" ");
 			boolean failure = whiteboard.removeUser("whatever");
 			assertFalse(failure);
 			
 			HashSet<String> result = new HashSet<String>();
-			result.add("genghis");
+			result.add("hi");
 			result.add(" ");
 			result.add("kevin");
 			
 			assertTrue(result.equals(whiteboard.getUsers()));
 		}
 	
-	// test setting users
-	// TODO determine if setUsers() adds to existing HashSet or replaces it
+	// test setUsers -> should add the users in newUsers to existing list of users
 	@Test
 	public void testSetUsers() {
 		int width = 800; 
