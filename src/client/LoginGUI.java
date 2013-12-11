@@ -14,6 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+/**
+ * The Login GUI provides a simple interface for the user to login
+ * 
+ */
 @SuppressWarnings("serial")
 public class LoginGUI extends JFrame {
 
@@ -79,6 +83,11 @@ public class LoginGUI extends JFrame {
 
 	private class OKListener implements ActionListener{
 
+		/**
+		 * Action listener for pressing the OK button.
+		 * Tries to connect to the server. Upon failure, 
+		 * the user will be prompted to pick another username.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			try{
@@ -90,8 +99,10 @@ public class LoginGUI extends JFrame {
 				LoginGUI.this.dispose();
 			} catch (Exception e){
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Your connection was refused or is invalid. Check your IP and port.", 
-						"Your connection was refused or is invalid. Check your IP and port.", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, 
+						"Your connection was refused or is invalid. Check your IP and port.", 
+						"Your connection was refused or is invalid. Check your IP and port.", 
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
