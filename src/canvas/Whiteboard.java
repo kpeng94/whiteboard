@@ -40,7 +40,7 @@ public class Whiteboard {
 		this.canvas = null;
 		this.lineSegments = new ArrayList<LineSegment>();
 	}
-
+	
 	/**
 	 * Constructor for a new whiteboard object
 	 * @param title Name of the whiteboard
@@ -188,5 +188,4 @@ public class Whiteboard {
 		window.setVisible(true);
 
 	}
-
 }

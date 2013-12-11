@@ -125,8 +125,10 @@ public class WhiteboardListGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int selectedRow = table.getSelectedRow();
-			String selectedWhiteboardName = (String) model.getValueAt(selectedRow, 0);
-			client.sendJoinWhiteboardMessage(selectedWhiteboardName);
+			if (selectedRow >= 0) {
+				String selectedWhiteboardName = (String) model.getValueAt(selectedRow, 0);
+				client.sendJoinWhiteboardMessage(selectedWhiteboardName);				
+			}
 		}
 	}
 	
