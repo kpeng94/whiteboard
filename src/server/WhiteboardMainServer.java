@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -30,7 +31,8 @@ public class WhiteboardMainServer {
 	     * @param port - port number, requires 0 <= port <= 65535
 	     */
 	    public WhiteboardMainServer(int port) throws IOException {
-	        serverSocket = new ServerSocket(port);
+	        serverSocket = new ServerSocket();
+	        serverSocket.bind(new InetSocketAddress("0.0.0.0", port));
 	        blockQ = new LinkedBlockingQueue<Packet>();
 	        dataServer = new WhiteboardDataServer(blockQ);
 	        dataServer.start();
