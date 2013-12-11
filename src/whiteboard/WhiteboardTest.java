@@ -3,6 +3,7 @@ package whiteboard;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -19,8 +20,7 @@ public class WhiteboardTest {
 	public void testGetName() {
 		int width = 800; int height = 600;
 		Canvas canvas = new Canvas(width, height);
-		ArrayList<String> users = new ArrayList<String>();
-		Whiteboard whiteboard = new Whiteboard("testName", canvas, users);
+		Whiteboard whiteboard = new Whiteboard("testName", canvas);
 		assertEquals("testName", whiteboard.getName());
 	}
 	
@@ -28,18 +28,21 @@ public class WhiteboardTest {
 	public void testAddGetUsers() {
 		int width = 800; int height = 600;
 		Canvas canvas = new Canvas(width, height);
-		ArrayList<String> users = new ArrayList<String>();
-		Whiteboard whiteboard = new Whiteboard("", canvas, users);
+		Whiteboard whiteboard = new Whiteboard("", canvas);
 		whiteboard.addUser("genghis");
 		whiteboard.addUser("kevin");
 		whiteboard.addUser("");
 		whiteboard.addUser(" ");
 		whiteboard.removeUser("kevin");
 		
-		ArrayList<String> result = new ArrayList<String>();
+		HashSet<String> result = new HashSet<String>();
 		result.add("genghis");
 		result.add("");
 		result.add(" ");
 		assertEquals(result, whiteboard.getUsers());
+	}
+	
+	public void isHashSetEqual() {
+		
 	}
 }

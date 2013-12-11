@@ -23,7 +23,7 @@ public class Whiteboard {
 	 * @param title Name of the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
-	public Whiteboard(String name, ArrayList<String> users) {
+	public Whiteboard(String name) {
 		this.name = name;
 		this.users = new HashSet<String>();
 		this.canvas = null;
@@ -37,7 +37,7 @@ public class Whiteboard {
 	 * @param canvas The canvas associated with the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
-	public Whiteboard(String name, Canvas canvas, ArrayList<String> users) {
+	public Whiteboard(String name, Canvas canvas) {
 		this.name = name;
 		this.canvas = canvas;
 		this.users = new HashSet<String>();

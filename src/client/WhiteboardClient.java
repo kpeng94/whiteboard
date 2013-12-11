@@ -221,8 +221,7 @@ public class WhiteboardClient{
 					mainGUI.throwWhiteboardErrorMessage();
 				} else if (request[0].equals("success") && request[2].equals("join")) {
 					Canvas canvas = new Canvas(width, height, this, request[3]);
-					ArrayList<String> initialUsers = new ArrayList<String>();
-					user.addWhiteboard(new Whiteboard(request[3], canvas, initialUsers));
+					user.addWhiteboard(new Whiteboard(request[3], canvas));
 					user.getWhiteboard(request[3]).display();
 				} else if (request[0].equals("success") && request[2].equals("exit")) {
 					user.removeWhiteboard(request[3]);
