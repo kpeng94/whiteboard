@@ -159,7 +159,7 @@ public class WhiteboardClient{
 					}
 					setWhiteboardNames(newWhiteboardNames);
 					mainGUI.updateTable(newWhiteboardNames);
-					return "success";
+					return "success0";
 				} else if (commandArgs[0].equals("list") && 
 						   commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
@@ -167,10 +167,10 @@ public class WhiteboardClient{
 						newUserList.add(commandArgs[i]);
 					}
 					whiteboardUsers = newUserList;
-					return "success";
+					return "success1";
 				} else if (commandArgs[0].equals("add")) {
 					whiteboardUsers.add(commandArgs[2]);
-					return "success";
+					return "success2";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
@@ -188,13 +188,12 @@ public class WhiteboardClient{
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
 					Canvas canvas = new Canvas(width, height, this, commandArgs[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
-					// TODO: add line segments here obtained from the server
 					whiteboard = new Whiteboard(commandArgs[3], canvas, initialUsers);
 					whiteboard.display();
 					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
 					whiteboard = null;
-					return "success";
+					return "success3";
 				} else if (commandArgs[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
@@ -209,7 +208,7 @@ public class WhiteboardClient{
 						int strokeSize = Integer.parseInt(commandArgs[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
-						return "success";
+						return "success4";
 					} else {
 						return "no whiteboard";
 					}
