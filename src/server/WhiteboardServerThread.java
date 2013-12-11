@@ -18,8 +18,10 @@ public class WhiteboardServerThread extends Thread {
 	// Username begins as null and will be set to non-null
 	// when the user picks a valid username.
 	private String userName = null;
+	
 	// Shared queue to send packets to the central data server. 
 	private final BlockingQueue<Packet> toServerQ;
+
 	// Individual queue to receive packets from the central data server.
 	private final BlockingQueue<Packet> incomingQ;
 	private final Socket socket;

@@ -33,17 +33,6 @@ public class UserTest {
 	@Test
 	public void testDefaultValues() {
 		User user = new User("username");
-
 		assertEquals(user.getUsername(), "username");
 	}
-	
-	@Test
-	public void testGetSetColor() {
-		User user = new User("username");
-
-	}
-	
-
-	
-	
 }
