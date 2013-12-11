@@ -139,19 +139,19 @@ public class WhiteboardClient{
 	 * @return message to client
 	 */
 	private String handleMessages(String input) {
-		String[] commandArgs = input.split(" ");
+		String[] request = input.split(" ");
 
 		// handles username requests
 
 		// Successful username attempt
-		if(commandArgs[0].equals("success") && commandArgs[1].equals("username")){
-			user = new User(commandArgs[2]);
+		if(request[0].equals("success") && request[1].equals("username")){
+			user = new User(request[2]);
 			mainGUI = new WhiteboardListGUI(this);
-			mainGUI.setTitle("Whiteboard - Logged in as: " + commandArgs[2]);	
+			mainGUI.setTitle("Whiteboard - Logged in as: " + request[2]);	
 			mainGUI.setVisible(true);
 
 			return "success";
-		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
+		} else if (request[0].equals("retry") && request[1].equals("username")){
 			// Failed username attempt
 
 			SimplePromptGUI newUsername = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_USERNAME);
@@ -162,62 +162,57 @@ public class WhiteboardClient{
 			if (user != null) {
 				//ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
 				//Whiteboard whiteboard = user.getWhiteboard();
-				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {					
+				if(request[0].equals("list") && request[1].equals("whiteboard")) {					
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
-					for (int i = 2; i < commandArgs.length; i++) {
-						newWhiteboardNames.add(commandArgs[i]);
+					for (int i = 2; i < request.length; i++) {
+						newWhiteboardNames.add(request[i]);
 					}
 					mainGUI.updateTable(newWhiteboardNames);
 					return "success0";
-				} else if (commandArgs[0].equals("list") && 
-						commandArgs[1].equals("whiteboard-user")) {
+				} else if (request[0].equals("list") && 
+						request[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
-					for (int i = 3; i < commandArgs.length; i++) {
-						newUserList.add(commandArgs[i]);
+					for (int i = 3; i < request.length; i++) {
+						newUserList.add(request[i]);
 					}
-					user.getWhiteboard(commandArgs[2]).setUsers(newUserList);
+					user.getWhiteboard(request[2]).setUsers(newUserList);
 					return "success1";
-				} else if (commandArgs[0].equals("add")) {
-					user.getWhiteboard(commandArgs[2]).addUser(commandArgs[3]);
+				} else if (request[0].equals("add")) {
+					user.getWhiteboard(request[2]).addUser(request[3]);
 					return "success2";
-				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
+				} else if (request[0].equals("retry") && request[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
 					return "retry whiteboard";
-				} else if (commandArgs[0].equals("remove")) {
-					String usernameToRemove = commandArgs[3];
-					ArrayList<String> whiteboardUsers = user.getWhiteboard(commandArgs[2]).getUsers();
-					int index = whiteboardUsers.indexOf(usernameToRemove);
-					if (index != -1) {
-						whiteboardUsers.remove(index);
-						return "success";
-					}
-					return "fail";			
-				} else if (commandArgs[0].equals("error")) {
+				} else if (request[0].equals("remove")) {
+					String usernameToRemove = request[3];
+					user.getWhiteboard(request[2]).removeUser(usernameToRemove);
+					return "did removing";			
+				} else if (request[0].equals("error")) {
 					mainGUI.throwWhiteboardErrorMessage();
 					return "error";
-				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
-					Canvas canvas = new Canvas(width, height, this, commandArgs[3]);
+				} else if (request[0].equals("success") && request[2].equals("join")) {
+					Canvas canvas = new Canvas(width, height, this, request[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
-					user.addWhiteboard(new Whiteboard(commandArgs[3], canvas, initialUsers));
-					user.getWhiteboard(commandArgs[3]).display();
+					user.addWhiteboard(new Whiteboard(request[3], canvas, initialUsers));
+					user.getWhiteboard(request[3]).display();
 					return "successful join";
-				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
-					user.removeWhiteboard(commandArgs[3]);
+				} else if (request[0].equals("success") && request[2].equals("exit")) {
+					user.removeWhiteboard(request[3]);
 					return "success3";
-				} else if (commandArgs[0].equals("draw")) {
+				} else if (request[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
-					Whiteboard whiteboard = user.getWhiteboard(commandArgs[2]);
+					Whiteboard whiteboard = user.getWhiteboard(request[2]);
 					if (whiteboard != null) {
-						int x1 = Integer.parseInt(commandArgs[3]);
-						int y1 = Integer.parseInt(commandArgs[4]);
-						int x2 = Integer.parseInt(commandArgs[5]);
-						int y2 = Integer.parseInt(commandArgs[6]);
-						Color color = new Color(Integer.parseInt(commandArgs[7]), 
-								Integer.parseInt(commandArgs[8]), 
-								Integer.parseInt(commandArgs[9]));
-						int strokeSize = Integer.parseInt(commandArgs[10]);
+						int x1 = Integer.parseInt(request[3]);
+						int y1 = Integer.parseInt(request[4]);
+						int x2 = Integer.parseInt(request[5]);
+						int y2 = Integer.parseInt(request[6]);
+						Color color = new Color(Integer.parseInt(request[7]), 
+								Integer.parseInt(request[8]), 
+								Integer.parseInt(request[9]));
+						int strokeSize = Integer.parseInt(request[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
 						return "success4";
