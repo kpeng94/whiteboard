@@ -23,10 +23,10 @@ public class WhiteboardClient{
 	private ArrayList<String> whiteboardNames;
 
 	// user's current whiteboard
-	private Whiteboard whiteboard;
+	// private Whiteboard whiteboard;
 
 	// users associated with current whiteboard
-	private ArrayList<String> whiteboardUsers;
+	// private ArrayList<String> whiteboardUsers;
 	private WhiteboardClientMain handler;
 	
 	// GUI for listing the whiteboards (i.e. main screen)
@@ -108,7 +108,13 @@ public class WhiteboardClient{
 	}
 
 	public void sendExitWhiteboardMessage() {
-		String message = "exit whiteboard " + whiteboard.getName();
+		String message;
+		if (user != null) {
+			message = "exit whiteboard " + user.getWhiteboard().getName();
+		} else {
+			message = "exit failure";
+		}
+		
 		printServer.println(message);
 	}
 
@@ -152,6 +158,8 @@ public class WhiteboardClient{
 			return "--------------------------------------------------------------------------";
 		} else {
 			if (user != null) {
+				ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
+				Whiteboard whiteboard = user.getWhiteboard();
 				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {					
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
