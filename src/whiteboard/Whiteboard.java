@@ -7,7 +7,12 @@ import client.Canvas;
 import client.WhiteboardGUI;
 
 /**
- * TODO: ADT, RI
+ * Whiteboard is an abstract datatype that represents the whiteboard.
+ * It has a unique name, a set of users currently using the whiteboard, 
+ * 		a list of lineSegments corresponding to line segments users have
+ * 		drawn, a canvas for the clients to draw, and the reference to 
+ * 		the GUI to link the view with the model/controller.
+ *     
  *
  */
 public class Whiteboard {
