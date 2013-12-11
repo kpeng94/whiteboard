@@ -74,9 +74,7 @@ public class WhiteboardClient{
 	 */
 	public void sendAddUsernameMessage(String username) {
 		String message = "add username " + username;
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 	}
 
 	/**
@@ -84,9 +82,7 @@ public class WhiteboardClient{
 	 */
 	public void sendDisconnectUsernameMessage() {
 		String message = "disconnect username " + user.getUsername();
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 		try {
 			printServer.close();
 			readServer.close();
@@ -103,9 +99,7 @@ public class WhiteboardClient{
 	 */
 	public void sendCreateWhiteboardMessage(String name) {
 		String message = "create whiteboard " + name;
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 	}
 
 	/**
@@ -114,9 +108,7 @@ public class WhiteboardClient{
 	 */
 	public void sendJoinWhiteboardMessage(String name) {
 		String message = "join whiteboard " + name;
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 	}
 
 	/**
@@ -131,9 +123,7 @@ public class WhiteboardClient{
 			message = "exit failure";
 		}
 
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 	}
 
 	/**
@@ -158,9 +148,7 @@ public class WhiteboardClient{
 				String.valueOf(r) + " " + String.valueOf(g) + " " + 
 				String.valueOf(b) + " " + String.valueOf(strokeSize);
 
-		synchronized(printServer){
-			printServer.println(message);	
-		}
+		printServer.println(message);	
 	}	
 
 	/**
