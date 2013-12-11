@@ -115,6 +115,10 @@ public class Whiteboard {
 		}
 	}
 
+	/**
+	 * Gets the list of line segments on this whiteboard.
+	 * @return the list of line segments on this whiteboard.
+	 */
 	public ArrayList<LineSegment> getLineSegments() {
 		return this.lineSegments;
 	}

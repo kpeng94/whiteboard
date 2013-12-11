@@ -29,7 +29,9 @@ public class Canvas extends JPanel {
     private String name;
     
     /**
-     * Constructor for a canvas.
+     * Constructor for a canvas. This will be specifically for the 
+     * server, as whiteboardClient will be null.
+     * 
      * @param width width in pixels
      * @param height height in pixels
      */
@@ -37,22 +39,16 @@ public class Canvas extends JPanel {
     	this.color = Color.BLACK;
     	this.strokeWidth = 3;
         this.setPreferredSize(new Dimension(width, height));
-
-        // This can be null if its the server's constructor
         this.whiteboardClient = null;
-
-        //addDrawingController();
-        // note: we can't call makeDrawingBuffer here, because it only
-        // works *after* this canvas has been added to a window.  Have to
-        // wait until paintComponent() is first called.
     }
     
     /**
-     * Constructor for a canvas
+     * Constructor for a canvas for a client.
+     * 
      * @param width width in pixels
      * @param height height in pixels
      * @param whiteboardClient client associated with this canvas
-     * @param name
+     * @param name name of the canvas
      */
     public Canvas(int width, int height, WhiteboardClient whiteboardClient, String name) {
     	this.color = Color.BLACK;
@@ -84,7 +80,7 @@ public class Canvas extends JPanel {
     }
     
     /**
-     * 
+     * Toggles the state of the eraser / pen.
      */
     public void toggleEraserMode() {
     	isEraserModeOn = !isEraserModeOn;
@@ -105,6 +101,7 @@ public class Canvas extends JPanel {
     public int getStrokeWidth() {
     	return this.strokeWidth;
     }
+    
     /**
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
@@ -120,7 +117,7 @@ public class Canvas extends JPanel {
         g.drawImage(drawingBuffer, 0, 0, null);
     }
     
-    /*
+    /**
      * Make the drawing buffer and draw some starting content for it.
      */
     private void makeDrawingBuffer() {
@@ -128,7 +125,7 @@ public class Canvas extends JPanel {
         fillWithWhite();
     }
     
-    /*
+    /**
      * Make the drawing buffer entirely white.
      */
     private void fillWithWhite() {
@@ -142,6 +139,11 @@ public class Canvas extends JPanel {
         this.repaint();
     }    
     
+    /**
+     * Draws the given line segment on to the screen.
+     * 
+     * @param lineSegment
+     */
     public void drawLineSegment(LineSegment lineSegment) {
     	if (drawingBuffer == null) {
     		makeDrawingBuffer();
@@ -156,7 +158,7 @@ public class Canvas extends JPanel {
         this.repaint();      
     }
     
-    /*
+    /**
      * Sends a message from the client to the server requesting to draw a
      * line from (x1, y1) to (x2, y2) using the selected color and stroke
      * width.
@@ -173,11 +175,14 @@ public class Canvas extends JPanel {
         								 this.strokeWidth);
     }
     
+    /**
+     * Sends a disconnect message to the server.
+     */
     public void sendDisconnectToServer(){
     	whiteboardClient.sendExitWhiteboardMessage(this.name);
     }
     
-    /*
+    /**
      * Add the mouse listener that supports the user's freehand drawing.
      */
     private void addDrawingController() {
@@ -186,7 +191,7 @@ public class Canvas extends JPanel {
         addMouseMotionListener(controller);
     }
     
-    /*
+    /**
      * DrawingController handles the user's freehand drawing.
      */
     private class DrawingController implements MouseListener, MouseMotionListener {
@@ -195,7 +200,7 @@ public class Canvas extends JPanel {
         private int lastX, lastY;
         private Color color;
         
-        /*
+        /**
          * When mouse button is pressed down, start drawing.
          */
         public void mousePressed(MouseEvent e) {
@@ -203,7 +208,7 @@ public class Canvas extends JPanel {
             lastY = e.getY();
         }
 
-        /*
+        /**
          * When mouse moves while a button is pressed down,
          * draw a line segment.
          */

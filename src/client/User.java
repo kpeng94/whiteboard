@@ -21,14 +21,27 @@ public class User {
 		return this.username;
 	}
 	
+	/**
+	 * 
+	 * @param whiteboard
+	 */
 	public void addWhiteboard(Whiteboard whiteboard) {
 		this.whiteboard.put(whiteboard.getName(), whiteboard);
 	}
 	
+	/**
+	 * Gets the whiteboard by name.
+	 * @param name Name of whiteboard to get.
+	 * @return whiteboard with given name.
+	 */
 	public Whiteboard getWhiteboard(String name){
 		return this.whiteboard.get(name);
 	}
 	
+	/**
+	 * Removes a whiteboard from this user.
+	 * @param name Name of whiteboard to remove.
+	 */
 	public void removeWhiteboard(String name){
 		this.whiteboard.remove(name);
 	}
