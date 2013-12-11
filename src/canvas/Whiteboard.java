@@ -1,32 +1,15 @@
 package canvas;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JFrame;
-import javax.swing.JSlider;
-import javax.swing.JTable;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 public class Whiteboard {
 	private String name;
 	private HashSet<String> users;
 	private ArrayList<LineSegment> lineSegments;
 	// Only applicable for client whiteboards
-	private JFrame window;
 	private Canvas canvas;
+	private WhiteboardGUI gui;
 
 	/**
 	 * Constructor for a new whiteboard object
@@ -38,6 +21,7 @@ public class Whiteboard {
 		this.name = name;
 		this.users = new HashSet<String>();
 		this.canvas = null;
+		this.gui = null;
 		this.lineSegments = new ArrayList<LineSegment>();
 	}
 	
@@ -83,7 +67,7 @@ public class Whiteboard {
 	 */
 	public void setUsers(ArrayList<String> newUsers) {
 		for(String user: newUsers){
-			users.add(user);
+			addUser(user);
 		}
 	}
 
@@ -92,7 +76,11 @@ public class Whiteboard {
 	 * @param user User to add
 	 */
 	public boolean addUser(String user) {
-		return users.add(user);
+		boolean success = users.add(user);
+		if(success && gui != null){
+			gui.addUserToModel(user);
+		}
+		return success;
 	}
 
 	/**
@@ -101,7 +89,11 @@ public class Whiteboard {
 	 * @return if removal was successful
 	 */
 	public boolean removeUser(String user) {
-		return users.remove(user);
+		boolean success = users.remove(user);
+		if(success && gui != null){
+			gui.removeUserFromModel(user);
+		}
+		return success;
 	}
 
 	/**
@@ -120,72 +112,6 @@ public class Whiteboard {
 	}
 
 	public void display() {
-
-		window = new JFrame(name);
-		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		window.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        canvas.sendDisconnectToServer();
-		    }
-		});
-		window.setLayout(new BorderLayout());
-		window.setResizable(false);
-		window.setSize(907, 600); // A little buffering for division between
-		// list of users and canvas
-
-		// Add toolbar
-		JToolBar toolbar = new JToolBar("Bar");
-		window.add(toolbar, BorderLayout.NORTH);
-		toolbar.setFloatable(false);
-
-		// Toolbar buttons
-		// Color Picker
-		JButton colorButton = new JButton("Choose Color");
-		toolbar.add(colorButton);
-		colorButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
-				if (color != null) {
-					canvas.setColor(color);
-				}
-			}
-		});
-
-		// Eraser Icon
-		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
-		JToggleButton eraserPicker = new JToggleButton("eraser", eraserIcon, false);
-		toolbar.add(eraserPicker);
-		eraserPicker.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				canvas.toggleEraserMode();
-			}            	
-		});
-
-		JSlider strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
-		toolbar.add(strokeSlider);
-		strokeSlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent c) {
-				JSlider s = (JSlider) c.getSource();
-				canvas.setStrokeWidth(s.getValue());
-			}
-		});
-
-		// Add canvas
-		window.add(canvas, BorderLayout.WEST);
-
-		// Add users list
-		String[] tableColumns = {"Guests"}; 
-		DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
-		JTable guessTable = new JTable(guessTableModel);
-		TableColumn column = guessTable.getColumnModel().getColumn(0);
-		column.setPreferredWidth(100);
-		guessTableModel.addRow(new Object[]{"Guests In Here"});
-		for (String user: users) {
-			guessTableModel.addRow(new Object[]{user});
-		}
-		window.add(guessTable, BorderLayout.EAST);
-		window.setVisible(true);
-
+		gui = new WhiteboardGUI(canvas);
 	}
 }
