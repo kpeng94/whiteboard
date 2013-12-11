@@ -30,11 +30,18 @@ public class WhiteboardClient{
 	private final int width = 800;
 	private final int height = 600;
 
-	private PrintWriter outOut;
+	private PrintWriter printServer;
+	private BufferedReader readServer;
 
 	public WhiteboardClient(WhiteboardClientMain initiate, Socket clientSocket){
 		socket = clientSocket;
 		handler = initiate;
+		try {
+			printServer = new PrintWriter(socket.getOutputStream(), true);
+			readServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			throw new RuntimeException("IO failed");
+		}
 		handleConnection();
 	}
 
@@ -44,15 +51,7 @@ public class WhiteboardClient{
 	 * @throws IOException if connection has an error or terminates unexpectedly
 	 */
 	private void handleConnection(){
-		final BufferedReader in;
-		final PrintWriter out;
-		try{
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream(), true);
-			outOut = out;
-		} catch(IOException e){
-			throw new RuntimeException("IO failed");
-		}
+		final BufferedReader in = readServer;
 
 		Thread GUIListener = new Thread(new Runnable() {
 			@Override
@@ -76,24 +75,32 @@ public class WhiteboardClient{
 	//create methods for sending shit
 	public void sendAddUsernameMessage(String username) {
 		String message = "add username " + username;
-		outOut.println(message);
+		printServer.println(message);
 	}
 	public void sendDisconnectUsernameMessage() {
 		String message = "disconnect username " + userName;
-		outOut.println(message);
+		printServer.println(message);
+		try {
+			printServer.close();
+			readServer.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
 	}
 	public void sendCreateWhiteboardMessage(String name) {
 		String message = "create whiteboard " + name;
-		outOut.println(message);
+		printServer.println(message);
 	}
 	public void sendJoinWhiteboardMessage(String name) {
 		String message = "join whiteboard " + name;
-		outOut.println(message);
+		printServer.println(message);
 	}
 
 	public void sendExitWhiteboardMessage() {
 		String message = "exit whiteboard " + whiteboard.getName();
-		outOut.println(message);
+		printServer.println(message);
 	}
 
 	public void sendDrawMessage(int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
@@ -102,7 +109,7 @@ public class WhiteboardClient{
 		String message = "draw whiteboard " + whiteboard.getName() + " " + String.valueOf(x1) + " " + String.valueOf(y1) + " "
 				+ String.valueOf(x2) + " " + String.valueOf(y2) + " " + String.valueOf(r) + " " + String.valueOf(g)
 				+ " " + String.valueOf(b) + " " + String.valueOf(strokeSize);
-		outOut.println(message);	
+		printServer.println(message);	
 	}	
 
 	/**
@@ -112,34 +119,31 @@ public class WhiteboardClient{
 	 * @return message to client
 	 */
 	private String handleMessages(String input) {
-		/*
-        String regex = "(look)|(dig -?\\d+ -?\\d+)|(flag -?\\d+ -?\\d+)|"
-                + "(deflag -?\\d+ -?\\d+)|(help)|(bye)";
-        if ( ! input.matches(regex)) {
-            // invalid input
-            return null;
-        }
-		 */
 		String[] commandArgs = input.split(" ");
+		
 		// handles username requests
 		if(commandArgs[0].equals("success") && commandArgs[1].equals("username")){
-			User user = new User(commandArgs[2]);	
-			return "success";		
+			user = new User(commandArgs[2]);
+			WhiteboardListGUI whiteboardList = new WhiteboardListGUI(this);
+			whiteboardList.setTitle("Whiteboard - Logged in as: " + commandArgs[2]);	
+			whiteboardList.setVisible(true);
+			
+			return "success";
 		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
-			// use simpleDialogGUI
-			handler.retryUsername();
+			SimplePromptGUI newUsername = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_USERNAME);
+			newUsername.setVisible(true);
+			
 			return "--------------------------------------------------------------------------";
-			// tell GUI to re-enter a username (retry username)
 		} else {
 			if (user != null) {
-				if(commandArgs[0].equals("list") && commandArgs[0].equals("whiteboard")) {
+				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newWhiteboardNames.add(commandArgs[i]);
 					}
 					setWhiteboardNames(newWhiteboardNames);
 					return "success";
-				} else if (commandArgs[0].equals("list") && commandArgs[0].equals("whiteboard-user")) {
+				} else if (commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newUserList.add(commandArgs[i]);

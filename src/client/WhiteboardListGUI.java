@@ -24,7 +24,6 @@ public class WhiteboardListGUI extends JFrame {
 	private final JButton logout;
 	private final WhiteboardClient client;
 	
-	@SuppressWarnings("serial")
 	public WhiteboardListGUI(WhiteboardClient clientSocket){
 		client = clientSocket;
 		
@@ -44,8 +43,8 @@ public class WhiteboardListGUI extends JFrame {
 		scrollPane = new JScrollPane(table);
 		
 		setResizable(false);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle("Whiteboards");
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -73,9 +72,10 @@ public class WhiteboardListGUI extends JFrame {
 		}
 	}
 	
-	public static void main(String[] args){
-		WhiteboardListGUI gui = new WhiteboardListGUI(null);
-		
-		gui.setVisible(true);
+	private class LogoutListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			client.sendDisconnectUsernameMessage();
+		}
 	}
 }
