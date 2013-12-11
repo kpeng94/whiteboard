@@ -15,15 +15,21 @@ import canvas.Whiteboard;
 
 public class WhiteboardClient{
 	private final Socket socket;
+
 	// User must be created (become non-null) following a "success username" 
 	private User user = null;
+
 	// list of all available whiteboard names
 	private ArrayList<String> whiteboardNames;
+
 	// user's current whiteboard
 	private Whiteboard whiteboard;
+
 	// users associated with current whiteboard
 	private ArrayList<String> whiteboardUsers;
 	private WhiteboardClientMain handler;
+	
+	// GUI for listing the whiteboards (i.e. main screen)
 	private WhiteboardListGUI mainGUI;
 
 	// for initializing a canvas
@@ -72,11 +78,13 @@ public class WhiteboardClient{
 		GUIListener.start();
 	}
 
+	// TODO (pzarker): pls.
 	//create methods for sending shit
 	public void sendAddUsernameMessage(String username) {
 		String message = "add username " + username;
 		printServer.println(message);
 	}
+	
 	public void sendDisconnectUsernameMessage() {
 		String message = "disconnect username " + user.getUsername();
 		printServer.println(message);
@@ -85,14 +93,15 @@ public class WhiteboardClient{
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
-			;
 		}
 		System.exit(0);
 	}
+	
 	public void sendCreateWhiteboardMessage(String name) {
 		String message = "create whiteboard " + name;
 		printServer.println(message);
 	}
+	
 	public void sendJoinWhiteboardMessage(String name) {
 		String message = "join whiteboard " + name;
 		printServer.println(message);
@@ -106,9 +115,11 @@ public class WhiteboardClient{
 	public void sendDrawMessage(int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
 		// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 		// [red] [green] [blue] [stroke size]
-		String message = "draw whiteboard " + whiteboard.getName() + " " + String.valueOf(x1) + " " + String.valueOf(y1) + " "
-				+ String.valueOf(x2) + " " + String.valueOf(y2) + " " + String.valueOf(r) + " " + String.valueOf(g)
-				+ " " + String.valueOf(b) + " " + String.valueOf(strokeSize);
+		String message = "draw whiteboard " + whiteboard.getName() + " " + 
+						 String.valueOf(x1) + " " + String.valueOf(y1) + " " + 
+						 String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
+						 String.valueOf(r) + " " + String.valueOf(g) + " " + 
+						 String.valueOf(b) + " " + String.valueOf(strokeSize);
 		printServer.println(message);	
 	}	
 
@@ -122,6 +133,8 @@ public class WhiteboardClient{
 		String[] commandArgs = input.split(" ");
 		
 		// handles username requests
+
+		// Successful username attempt
 		if(commandArgs[0].equals("success") && commandArgs[1].equals("username")){
 			user = new User(commandArgs[2]);
 			mainGUI = new WhiteboardListGUI(this);
@@ -130,13 +143,15 @@ public class WhiteboardClient{
 			
 			return "success";
 		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
+			// Failed username attempt
+			
 			SimplePromptGUI newUsername = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_USERNAME);
 			newUsername.setVisible(true);
 			
 			return "--------------------------------------------------------------------------";
 		} else {
 			if (user != null) {
-				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {
+				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {					
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newWhiteboardNames.add(commandArgs[i]);
