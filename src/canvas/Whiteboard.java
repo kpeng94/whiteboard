@@ -117,10 +117,9 @@ public class Whiteboard {
     }
     
     public void display() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+		
                 final JFrame window = new JFrame(name);
-                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     window.setLayout(new BorderLayout());
                     window.setResizable(false);
                     window.setSize(907, 600); // A little buffering for division between
@@ -178,8 +177,7 @@ public class Whiteboard {
             		}
             		window.add(guessTable, BorderLayout.EAST);
             		window.setVisible(true);
-    			}			
-    		});
+    		
     }
     
 }

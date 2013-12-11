@@ -118,6 +118,10 @@ public class WhiteboardDataServer extends Thread {
 								}
 								whiteboard.addUser(user);
 								users.get(user).offer(new Packet(createUserList(whiteboardName)));
+								for(LineSegment segment: whiteboard.getLineSegments()){
+									users.get(user).offer(new Packet("draw whiteboard " + whiteboardName
+											 + " " + segment.toString()));
+								}
 							}
 							// Sends messages if the user is exiting
 							else{

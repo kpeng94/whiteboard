@@ -167,7 +167,7 @@ public class WhiteboardClient{
 					}
 					setWhiteboardNames(newWhiteboardNames);
 					mainGUI.updateTable(newWhiteboardNames);
-					return "success";
+					return "success0";
 				} else if (commandArgs[0].equals("list") && 
 						   commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
@@ -176,11 +176,11 @@ public class WhiteboardClient{
 					}
 					//whiteboardUsers = newUserList;
 					user.getWhiteboard().setUsers(newUserList);
-					return "success";
+					return "success1";
 				} else if (commandArgs[0].equals("add")) {
 					//whiteboardUsers.add(commandArgs[2]);
 					user.getWhiteboard().addUser(commandArgs[2]);
-					return "success";
+					return "success2";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
@@ -206,7 +206,7 @@ public class WhiteboardClient{
 					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
 					user.setWhiteboard(null);
-					return "success";
+					return "success3";
 				} else if (commandArgs[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
@@ -222,7 +222,7 @@ public class WhiteboardClient{
 						int strokeSize = Integer.parseInt(commandArgs[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
-						return "success";
+						return "success4";
 					} else {
 						return "no whiteboard";
 					}
