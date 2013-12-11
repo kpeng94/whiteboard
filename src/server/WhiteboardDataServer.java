@@ -100,8 +100,7 @@ public class WhiteboardDataServer extends Thread {
 							// If name is okay, tell all clients a new whiteboard was made 
 							// and create the whiteboard
 							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
-							whiteboards.put(whiteboardName, new Whiteboard(packetInfo[2], 
-											new ArrayList<String>()));
+							whiteboards.put(whiteboardName, new Whiteboard(packetInfo[2]));
 							for(BlockingQueue<Packet> bq: users.values()){
 								bq.offer(new Packet("add whiteboard " + whiteboardName));
 							}
