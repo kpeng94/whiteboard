@@ -120,6 +120,7 @@ public class WhiteboardClient{
 						 String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
 						 String.valueOf(r) + " " + String.valueOf(g) + " " + 
 						 String.valueOf(b) + " " + String.valueOf(strokeSize);
+		System.out.println(message);
 		printServer.println(message);	
 	}	
 
@@ -159,7 +160,8 @@ public class WhiteboardClient{
 					setWhiteboardNames(newWhiteboardNames);
 					mainGUI.updateTable(newWhiteboardNames);
 					return "success";
-				} else if (commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard-user")) {
+				} else if (commandArgs[0].equals("list") && 
+						   commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newUserList.add(commandArgs[i]);
@@ -184,22 +186,26 @@ public class WhiteboardClient{
 				} else if (commandArgs[0].equals("error")) {
 					return "error";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
-					Canvas canvas = new Canvas(width, height);
+					Canvas canvas = new Canvas(width, height, this);
 					ArrayList<String> initialUsers = new ArrayList<String>();
+					// TODO: add line segments here obtained from the server
 					whiteboard = new Whiteboard(commandArgs[2], canvas, initialUsers);
-					return "success";
+					whiteboard.display();
+					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
 					whiteboard = null;
 					return "success";
 				} else if (commandArgs[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
-					// [red] [green] [blue] [stroke size]
+					// 				   [red] [green] [blue] [stroke size]
 					if (whiteboard != null) {
 						int x1 = Integer.parseInt(commandArgs[3]);
 						int y1 = Integer.parseInt(commandArgs[4]);
 						int x2 = Integer.parseInt(commandArgs[5]);
 						int y2 = Integer.parseInt(commandArgs[6]);
-						Color color = new Color(Integer.parseInt(commandArgs[7]), Integer.parseInt(commandArgs[8]), Integer.parseInt(commandArgs[9]));
+						Color color = new Color(Integer.parseInt(commandArgs[7]), 
+												Integer.parseInt(commandArgs[8]), 
+												Integer.parseInt(commandArgs[9]));
 						int strokeSize = Integer.parseInt(commandArgs[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);

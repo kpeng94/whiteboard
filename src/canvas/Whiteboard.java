@@ -1,25 +1,34 @@
 package canvas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JSlider;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class Whiteboard {
 	private String name;
 	private Canvas canvas;
 	private ArrayList<String> users;
-	private ArrayList<LineSegment> segments;
+	private ArrayList<LineSegment> lineSegments;
 	
 	/**
-	 * Constructor for a whiteboard object
+	 * Constructor for a new whiteboard object
 	 * @param title Name of the whiteboard
-	 * 		TODO: Currently, this is the name of the window, do we want that? 
-	 * 		      We would have to make it changeable later as well if we were to do that.
 	 * @param canvas The canvas associated with the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
@@ -27,9 +36,24 @@ public class Whiteboard {
 		this.name = name;
 		this.canvas = canvas;
 		this.users = users;
-		this.segments = new ArrayList<LineSegment>();
+		this.lineSegments = new ArrayList<LineSegment>();
 	}
-        	
+
+	/**
+	 * Constructor for a new whiteboard object
+	 * @param title Name of the whiteboard
+	 * @param canvas The canvas associated with the whiteboard
+	 * @param users The list of users who are currently accessing this whiteboard
+	 * @param lineSegments The list of segments that are already on this whiteboard
+	 */
+	public Whiteboard(String name, Canvas canvas, ArrayList<String> users, 
+					  ArrayList<LineSegment> lineSegments) {
+		this.name = name;
+		this.canvas = canvas;
+		this.users = users;
+		this.lineSegments = lineSegments;
+	}	
+	
     /**
      * Returns the name of the whiteboard.
      * @return the name of the whiteboard.
@@ -71,43 +95,81 @@ public class Whiteboard {
     }
     
     /**
-     * 
-     * @param lineSegment
+     * Adds a line segment to the whiteboard's canvas object.
+     * @param lineSegment Line segment to add
      */
     public void addLineSegment(LineSegment lineSegment) {
-//    	this.canvas.setColor(lineSegment.getColor());
-//    	this.canvas.setStrokeWidth(lineSegment.getStrokeSize());
-//    	this.canvas.drawLineSegment();
+    	this.canvas.drawLineSegment(lineSegment);
     }
     
-//    public void display() {
-//        JFrame window = new JFrame("Freehand Canvas");
-//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        window.setSize(1300, 1000);
-//        window.setLayout(new BorderLayout());
-//        
-//        // Add toolbar to the GUI
-//        JToolBar toolbar = new JToolBar("Bar");
-//        toolbar.setFloatable(false);
-//        JTable listOfUsers = new JTable();
-//    	JButton a = new JButton("WHO");
-//    	window.add(toolbar, BorderLayout.NORTH);
-//    	toolbar.add(a);
-//        window.setResizable(false);
-//        window.add(this.canvas, BorderLayout.CENTER);
-////        window.pack();
-//        window.setVisible(true);
-//    }
+    public ArrayList<LineSegment> getLineSegments() {
+    	return this.lineSegments;
+    }
     
-	/**
-	 * Main method, which generates the GUI.
-	 */
-	public static void main(final String[] args) {
+    public void display() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Whiteboard whiteboard = new Whiteboard("Whiteboard", new Canvas(800, 600), new ArrayList<String>());
-//				whiteboard.display();
-			}
-		});
-	}	
+                final JFrame window = new JFrame(name);
+                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    window.setLayout(new BorderLayout());
+                    window.setResizable(false);
+                    window.setSize(907, 600); // A little buffering for division between
+                    						  // list of users and canvas
+                    
+                    // Add toolbar
+                    JToolBar toolbar = new JToolBar("Bar");
+                	window.add(toolbar, BorderLayout.NORTH);
+                    toolbar.setFloatable(false);
+                    
+                    // Toolbar buttons
+                    // Color Picker
+                    JButton colorButton = new JButton("Choose Color");
+                	toolbar.add(colorButton);
+                	colorButton.addActionListener(new ActionListener() {
+            			public void actionPerformed(ActionEvent event) {
+            				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
+            				if (color != null) {
+            					canvas.setColor(color);
+            				}
+            			}
+                	});
+                	
+                	// Eraser Icon
+            		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
+                    JToggleButton eraserPicker = new JToggleButton("eraser", eraserIcon, false);
+                	toolbar.add(eraserPicker);
+                	eraserPicker.addActionListener(new ActionListener() {
+                		public void actionPerformed(ActionEvent event) {
+                			canvas.toggleEraserMode();
+                    	}            	
+            		});
+
+                	JSlider strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
+                	toolbar.add(strokeSlider);
+                	strokeSlider.addChangeListener(new ChangeListener() {
+                		public void stateChanged(ChangeEvent c) {
+                			JSlider s = (JSlider) c.getSource();
+                			canvas.setStrokeWidth(s.getValue());
+                		}
+                	});
+                	
+                	// Add canvas
+                    window.add(canvas, BorderLayout.WEST);
+
+                    // Add users list
+                	String[] tableColumns = {"Guests"}; 
+                	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
+            		JTable guessTable = new JTable(guessTableModel);
+                	TableColumn column = guessTable.getColumnModel().getColumn(0);
+                	column.setPreferredWidth(100);
+            		guessTableModel.addRow(new Object[]{"Guests In Here"});
+            		for (int i = 0; i < users.size(); i++) {
+            			guessTableModel.addRow(new Object[]{users.get(i)});
+            		}
+            		window.add(guessTable, BorderLayout.EAST);
+            		window.setVisible(true);
+    			}			
+    		});
+    }
+    
 }

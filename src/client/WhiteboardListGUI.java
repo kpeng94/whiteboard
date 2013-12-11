@@ -14,6 +14,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * GUI for listing the whiteboards on the server.
+ * This is a client's view; the client has an option to
+ * add a new whiteboard, join an existing one, or logout.
+ */
 @SuppressWarnings("serial")
 public class WhiteboardListGUI extends JFrame {
 	
@@ -22,7 +27,7 @@ public class WhiteboardListGUI extends JFrame {
 	private final JTable table;
 	private final DefaultTableModel model;
 	private final JButton createWhiteboard;
-	private final JButton ok;
+	private final JButton selectWhiteboard;
 	private final JButton logout;
 	private final WhiteboardClient client;
 	
@@ -32,14 +37,17 @@ public class WhiteboardListGUI extends JFrame {
 		label = new JLabel("Select the whiteboard to join, or create a new one.");
 		createWhiteboard = new JButton("New Whiteboard");
 		createWhiteboard.addActionListener(new WhiteboardCreateListener());
-		ok = new JButton("Select Whiteboard");
+
+		selectWhiteboard = new JButton("Select Whiteboard");
+		selectWhiteboard.addActionListener(new WhiteboardSelectListener());
+		
 		logout = new JButton("Logout");
 		logout.addActionListener(new LogoutListener());
 		
 		model = new DefaultTableModel(new Object[]{"Whiteboard Name"}, 0);
 		table = new JTable(model){
 
-			public boolean isCellEditable(int row, int column) {                
+			public boolean isCellEditable(int row, int column) {
 				return false;               
 			}
 		};
@@ -58,12 +66,16 @@ public class WhiteboardListGUI extends JFrame {
 		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup().addComponent(label))
 				.addGroup(layout.createSequentialGroup().addComponent(scrollPane))
-				.addGroup(layout.createSequentialGroup().addComponent(createWhiteboard).addComponent(ok).addComponent(logout)));
+				.addGroup(layout.createSequentialGroup().addComponent(createWhiteboard)
+														.addComponent(selectWhiteboard)
+														.addComponent(logout)));
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup().addComponent(label))
 				.addGroup(layout.createParallelGroup().addComponent(scrollPane))
-				.addGroup(layout.createParallelGroup().addComponent(createWhiteboard).addComponent(ok).addComponent(logout)));
+				.addGroup(layout.createParallelGroup().addComponent(createWhiteboard)
+													  .addComponent(selectWhiteboard)
+													  .addComponent(logout)));
 		
 		pack();
 	}
@@ -81,6 +93,21 @@ public class WhiteboardListGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			SimplePromptGUI prompt = new SimplePromptGUI(client, SimplePromptGUI.PROMPT_WHITEBOARD);
 			prompt.setVisible(true);
+		}
+	}
+	
+	private class WhiteboardSelectListener implements ActionListener {
+
+		/**
+		 * Action performed when a user wants to join a whiteboard.
+		 * Takes the selected row and tries to join the whiteboard 
+		 * listed in that row.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int selectedRow = table.getSelectedRow();
+			String selectedWhiteboardName = (String) model.getValueAt(selectedRow, 0);
+			client.sendJoinWhiteboardMessage(selectedWhiteboardName);
 		}
 	}
 	

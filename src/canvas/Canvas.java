@@ -1,33 +1,18 @@
 package canvas;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTable;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+
+import client.WhiteboardClient;
 
 /**
  * Canvas represents a drawing surface that allows the user to draw
@@ -39,11 +24,11 @@ public class Canvas extends JPanel {
     private Image drawingBuffer;
     private Color color;
     private int strokeWidth;
-    private User user;
-    private boolean isEraserModeOn;
+    private final WhiteboardClient whiteboardClient;
+    private boolean isEraserModeOn = false;
     
     /**
-     * Make a canvas.
+     * Constructor for a canvas.
      * @param width width in pixels
      * @param height height in pixels
      */
@@ -51,6 +36,27 @@ public class Canvas extends JPanel {
     	this.color = Color.BLACK;
     	this.strokeWidth = 3;
         this.setPreferredSize(new Dimension(width, height));
+
+        // This can be null if its the server's constructor
+        this.whiteboardClient = null;
+
+        addDrawingController();
+        // note: we can't call makeDrawingBuffer here, because it only
+        // works *after* this canvas has been added to a window.  Have to
+        // wait until paintComponent() is first called.
+    }
+    
+    /**
+     * Constructor for a canvas
+     * @param width width in pixels
+     * @param height height in pixels
+     * @param whiteboardClient client associated with this canvas
+     */
+    public Canvas(int width, int height, WhiteboardClient whiteboardClient) {
+    	this.color = Color.BLACK;
+    	this.strokeWidth = 3;
+        this.setPreferredSize(new Dimension(width, height));
+        this.whiteboardClient = whiteboardClient;
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
@@ -133,27 +139,34 @@ public class Canvas extends JPanel {
         this.repaint();
     }    
     
-    /*
-     * Draw a line between two points (x1, y1) and (x2, y2), specified in
-     * pixels relative to the upper-left corner of the drawing buffer.
-     */
-    public LineSegment drawLineSegment(int x1, int y1, int x2, int y2) {
+    public void drawLineSegment(LineSegment lineSegment) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-        
-        g.setStroke(new BasicStroke(this.strokeWidth));
-        if (isEraserModeOn) {
-        	g.setColor(Color.WHITE);
-        } else {        	
-            g.setColor(this.color);
-        }
-        g.drawLine(x1, y1, x2, y2);
-        LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, this.color, this.strokeWidth);
-        
+        g.setStroke(new BasicStroke(lineSegment.getStrokeSize()));
+        g.drawLine(lineSegment.getStartPoint().x, lineSegment.getStartPoint().y,
+        		   lineSegment.getEndPoint().x, lineSegment.getEndPoint().y);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
         this.repaint();
-        return lineSegment;
     }
+    
+    /*
+     * Sends a message from the client to the server requesting to draw a
+     * line from (x1, y1) to (x2, y2) using the selected color and stroke
+     * width.
+     */
+    public void sendLineSegmentToServer(int x1, int y1, int x2, int y2) {        
+    	Color color;
+    	if (isEraserModeOn) {
+        	color = Color.WHITE;
+        } else {        	
+            color = this.color;
+        }
+        whiteboardClient.sendDrawMessage(x1, y1, x2, y2, color.getRed(), 
+        								 color.getGreen(), color.getBlue(), 
+        								 this.strokeWidth);
+    }
+    
+    
     
     /*
      * Add the mouse listener that supports the user's freehand drawing.
@@ -189,7 +202,7 @@ public class Canvas extends JPanel {
         public void mouseDragged(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
-            drawLineSegment(lastX, lastY, x, y);
+            sendLineSegmentToServer(lastX, lastY, x, y);
             lastX = x;
             lastY = y;
         }
@@ -202,78 +215,89 @@ public class Canvas extends JPanel {
         public void mouseExited(MouseEvent e) { }
     }
     
- 
-    public void displayListOfGuests(ArrayList<String> guests, JFrame window) {
-    	String[] tableColumns = {"Guests"}; 
-    	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
-		JTable guessTable = new JTable(guessTableModel);
-    	TableColumn column = guessTable.getColumnModel().getColumn(0);
-    	column.setPreferredWidth(100);
-		guessTableModel.addRow(new Object[]{"Guests In Here"});
-		for (int i = 0; i < guests.size(); i++) {
-			guessTableModel.addRow(new Object[]{guests.get(i)});
-		}
-		window.add(guessTable, BorderLayout.EAST);
-    }
+//    public void display(ArrayList<String> users) {
+//    	final ArrayList<String> listOfUsers = users;
+//		SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//                final JFrame window = new JFrame("Freehand Canvas");
+//                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                window.setLayout(new BorderLayout());
+//                window.setResizable(false);
+//                window.setSize(907, 600); // A little buffering for division between
+//                						  // list of users and canvas
+//                
+//                // Add toolbar
+//                JToolBar toolbar = new JToolBar("Bar");
+//            	window.add(toolbar, BorderLayout.NORTH);
+//                toolbar.setFloatable(false);
+//                final Canvas canvas = new Canvas(800, 600);
+//                
+//                // Toolbar buttons
+//                // Color Picker
+//                JButton colorButton = new JButton("Choose Color");
+//            	toolbar.add(colorButton);
+//            	colorButton.addActionListener(new ActionListener() {
+//        			public void actionPerformed(ActionEvent event) {
+//        				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
+//        				if (color != null) {
+//        					canvas.setColor(color);
+//        				}
+//        			}
+//            	});
+//            	
+//            	// Eraser Icon
+//        		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
+//                JToggleButton eraserPicker = new JToggleButton("eraser", eraserIcon, false);
+//            	toolbar.add(eraserPicker);
+//            	eraserPicker.addActionListener(new ActionListener() {
+//            		public void actionPerformed(ActionEvent event) {
+//            			canvas.toggleEraserMode();
+//                	}            	
+//        		});
+//
+//            	JSlider strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
+//            	toolbar.add(strokeSlider);
+//            	strokeSlider.addChangeListener(new ChangeListener() {
+//            		public void stateChanged(ChangeEvent c) {
+//            			JSlider s = (JSlider) c.getSource();
+//            			canvas.setStrokeWidth(s.getValue());
+//            		}
+//            	});
+//            	
+//            	// Add canvas
+//                window.add(canvas, BorderLayout.WEST);
+//
+//                // Add users list
+//
+//                //   guests.add("Genghis");
+//            	String[] tableColumns = {"Guests"}; 
+//            	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
+//        		JTable guessTable = new JTable(guessTableModel);
+//            	TableColumn column = guessTable.getColumnModel().getColumn(0);
+//            	column.setPreferredWidth(100);
+//        		guessTableModel.addRow(new Object[]{"Guests In Here"});
+//        		for (int i = 0; i < listOfUsers.size(); i++) {
+//        			guessTableModel.addRow(new Object[]{listOfUsers.get(i)});
+//        		}
+//        		window.add(guessTable, BorderLayout.EAST);
+//        		window.setVisible(true);
+//			}			
+//		});
+//    }
+//    public void displayListOfGuests(ArrayList<String> guests, JFrame window) {
+//    	String[] tableColumns = {"Guests"}; 
+//    	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
+//		JTable guessTable = new JTable(guessTableModel);
+//    	TableColumn column = guessTable.getColumnModel().getColumn(0);
+//    	column.setPreferredWidth(100);
+//		guessTableModel.addRow(new Object[]{"Guests In Here"});
+//		for (int i = 0; i < guests.size(); i++) {
+//			guessTableModel.addRow(new Object[]{guests.get(i)});
+//		}
+//		window.add(guessTable, BorderLayout.EAST);
+//    }
     
 	public static void main(final String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				
-				// Set up window
-                final JFrame window = new JFrame("Freehand Canvas");
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setLayout(new BorderLayout());
-                window.setResizable(false);
-                window.setLayout(new BorderLayout());
-                window.setSize(907, 600); // A little buffering for division between
-                						  // list of users and canvas
-                
-                // Add toolbar
-                JToolBar toolbar = new JToolBar("Bar");
-            	window.add(toolbar, BorderLayout.NORTH);
-                toolbar.setFloatable(false);
-                final Canvas canvas = new Canvas(800, 600);
-                
-                // Toolbar buttons
-                // Color Picker
-                JButton colorButton = new JButton("Choose Color");
-            	toolbar.add(colorButton);
-            	colorButton.addActionListener(new ActionListener() {
-        			public void actionPerformed(ActionEvent event) {
-        				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
-        				if (color != null) {
-        					canvas.setColor(color);
-        				}
-        			}
-            	});
 
-        		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
-                JToggleButton eraserPicker = new JToggleButton("eraser", eraserIcon, false);
-            	toolbar.add(eraserPicker);
-            	eraserPicker.addActionListener(new ActionListener() {
-            		public void actionPerformed(ActionEvent event) {
-            			canvas.toggleEraserMode();
-                	}            	
-        		});
-
-            	JSlider strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
-            	toolbar.add(strokeSlider);
-            	strokeSlider.addChangeListener(new ChangeListener() {
-            		public void stateChanged(ChangeEvent c) {
-            			JSlider s = (JSlider) c.getSource();
-            			canvas.setStrokeWidth(s.getValue());
-            		}
-            	});
-            	// Add canvas
-                window.add(canvas, BorderLayout.WEST);
-
-                // Add users list
-                ArrayList<String> guests = new ArrayList<String>();
-                guests.add("Genghis");
-                canvas.displayListOfGuests(guests, window);
-                window.setVisible(true);
-			}
-		});
 	}	
 }
