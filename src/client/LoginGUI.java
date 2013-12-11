@@ -53,9 +53,12 @@ public class LoginGUI extends JFrame {
 		displayUserName = new JLabel("Username");
 
 		typeIP = new JTextField("");
+		typeIP.addActionListener(new OKListener());
 		typePort = new JTextField("4444");
+		typePort.addActionListener(new OKListener());
 		typeUserName = new JTextField("");
-
+		typeUserName.addActionListener(new OKListener());
+		
 		ok = new JButton("OK");
 		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");

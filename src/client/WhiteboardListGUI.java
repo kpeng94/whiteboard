@@ -87,12 +87,14 @@ public class WhiteboardListGUI extends JFrame {
 		pack();
 	}
 	
-	// THIS MAY BE CHANGED LATER :: (TODO)
 	public void updateTable(ArrayList<String> users){
-		model.setRowCount(0);
 		for(String s: users){
 			model.addRow(new Object[]{s});
 		}
+	}
+	
+	public void addWhiteboard(String name){
+		model.addRow(new Object[]{name});
 	}
 	
 	public void throwWhiteboardErrorMessage(){

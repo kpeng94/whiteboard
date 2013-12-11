@@ -118,6 +118,6 @@ public class Whiteboard {
 	 * Displays the whiteboard.
 	 */
 	public void display() {
-		gui = new WhiteboardGUI(canvas);
+		gui = new WhiteboardGUI(canvas, name);
 	}
 }

@@ -103,7 +103,7 @@ public class WhiteboardDataServer extends Thread {
 							whiteboards.put(whiteboardName, new Whiteboard(packetInfo[2], 
 											new ArrayList<String>()));
 							for(BlockingQueue<Packet> bq: users.values()){
-								bq.offer(new Packet(createWhiteboardList()));
+								bq.offer(new Packet("add whiteboard " + whiteboardName));
 							}
 						}
 					}

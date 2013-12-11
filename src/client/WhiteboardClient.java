@@ -36,7 +36,7 @@ public class WhiteboardClient{
 		} catch (IOException e) {
 			throw new RuntimeException("IO failed");
 		}
-		handleConnection();
+		handleServerRequests();
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class WhiteboardClient{
 	 * 
 	 * @throws IOException if connection has an error or terminates unexpectedly
 	 */
-	private void handleConnection(){
+	private void handleServerRequests(){
 		final BufferedReader in = readServer;
 
 		Thread GUIListener = new Thread(new Runnable() {
@@ -157,11 +157,23 @@ public class WhiteboardClient{
 						request[1].equals("whiteboard-user")) {
 					HashSet<String> newUserList = new HashSet<String>();
 					for (int i = 3; i < request.length; i++) {
+						// Adds a message if the user is you
+						if(request[i].equals(user.getUsername())){
+							request[i] += " (me!)";
+						}
 						newUserList.add(request[i]);
 					}
 					user.getWhiteboard(request[2]).setUsers(newUserList);
-				} else if (request[0].equals("add")) {
+				} else if (request[0].equals("add") &&
+						request[1].equals("whiteboard")) {
+					mainGUI.addWhiteboard(request[2]);
+				} else if (request[0].equals("add") &&
+						request[1].equals("whiteboard-user")) {
+					if(request[3].equals(user.getUsername())){
+						request[3] += " (me!)";
+					}
 					user.getWhiteboard(request[2]).addUser(request[3]);
+
 				} else if (request[0].equals("retry") && request[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
