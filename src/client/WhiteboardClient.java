@@ -128,7 +128,7 @@ public class WhiteboardClient{
 	}	
 
 	/**
-	 * Handler for client input, performing requested operations and returning an output message.
+	 * Handler for client input, performing requested operations.
 	 * 
 	 * @param input message from client
 	 */
@@ -196,9 +196,6 @@ public class WhiteboardClient{
 					}
 				}
 			}
-			
-			// Should never get here--make sure to return in each of the valid cases above.
-			throw new UnsupportedOperationException();
 		}
 	}
 }
