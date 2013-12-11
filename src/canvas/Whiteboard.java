@@ -38,7 +38,6 @@ public class Whiteboard {
 		this.canvas = null;
 		this.lineSegments = new ArrayList<LineSegment>();
 	}
-
 	
 	/**
 	 * Constructor for a new whiteboard object
@@ -99,21 +98,29 @@ public class Whiteboard {
      * @param lineSegment Line segment to add
      */
     public void addLineSegment(LineSegment lineSegment) {
-    	this.lineSegments.add(lineSegment);
     	if (this.canvas != null) {
         	this.canvas.drawLineSegment(lineSegment);    		
+    	} else {
+    	   	this.lineSegments.add(lineSegment);   		
     	}
     }
     
+    /**
+     * Gets the list of line segments.
+     * @return the list of line segments.
+     */
     public ArrayList<LineSegment> getLineSegments() {
     	return this.lineSegments;
     }
     
+    /**
+     * Displays this whiteboard.
+     */
     public void display() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
                 final JFrame window = new JFrame(name);
-                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     window.setLayout(new BorderLayout());
                     window.setResizable(false);
                     window.setSize(907, 600); // A little buffering for division between
@@ -130,7 +137,9 @@ public class Whiteboard {
                 	toolbar.add(colorButton);
                 	colorButton.addActionListener(new ActionListener() {
             			public void actionPerformed(ActionEvent event) {
-            				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
+            				Color color = JColorChooser.showDialog(window, 
+            													   "Choose Background Color", 
+            													   Color.WHITE);
             				if (color != null) {
             					canvas.setColor(color);
             				}
