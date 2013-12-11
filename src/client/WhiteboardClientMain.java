@@ -2,6 +2,10 @@ package client;
 
 import java.net.Socket;
 
+/**
+ * TODO: word this better?
+ * A class for managing a whiteboard client.
+ */
 public class WhiteboardClientMain {
 	
 	private WhiteboardClient client;

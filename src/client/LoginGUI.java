@@ -31,6 +31,10 @@ public class LoginGUI extends JFrame {
 	private final JButton cancel;
 	private final WhiteboardClientMain client;
 
+	/**
+	 * Constructor for this GUI. 
+	 * @param clientObject Helps manage the client.
+	 */
 	public LoginGUI(WhiteboardClientMain clientObject){
 		loginText = new JLabel("Log into the whiteboard server.");
 		displayIP = new JLabel("Server IP");
