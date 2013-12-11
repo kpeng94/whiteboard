@@ -198,8 +198,6 @@ public class Canvas extends JPanel {
         // store the coordinates of the last mouse event, so we can
         // draw a line segment from that last point to the point of the next mouse event.
         private int lastX, lastY;
-        private Color color;
-        
         /**
          * When mouse button is pressed down, start drawing.
          */

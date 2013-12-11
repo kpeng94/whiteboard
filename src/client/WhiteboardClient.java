@@ -18,8 +18,6 @@ public class WhiteboardClient{
 	// User must be created (become non-null) following a "success username" 
 	private User user = null;
 
-	private WhiteboardClientMain handler;
-
 	// GUI for listing the whiteboards (i.e. main screen)
 	private WhiteboardListGUI mainGUI;
 
@@ -32,7 +30,6 @@ public class WhiteboardClient{
 
 	public WhiteboardClient(WhiteboardClientMain initiate, Socket clientSocket){
 		socket = clientSocket;
-		handler = initiate;
 		try {
 			printServer = new PrintWriter(socket.getOutputStream(), true);
 			readServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -55,11 +52,10 @@ public class WhiteboardClient{
 			public void run() {
 				try {
 					for (String input = in.readLine(); input != null; input = in.readLine()) {
-						String output = handleMessages(input);
-						System.out.println(output);
+						handleMessages(input);
 					}
 				} catch (IOException e) {
-					;
+					
 				}
 			}
 		});
@@ -84,7 +80,7 @@ public class WhiteboardClient{
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
-			;
+			
 		}
 		System.exit(0);
 	}
@@ -124,7 +120,7 @@ public class WhiteboardClient{
 				String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
 				String.valueOf(r) + " " + String.valueOf(g) + " " + 
 				String.valueOf(b) + " " + String.valueOf(strokeSize);
-		System.out.println(message);
+
 		synchronized(printServer){
 			printServer.println(message);	
 		}
@@ -134,39 +130,29 @@ public class WhiteboardClient{
 	 * Handler for client input, performing requested operations and returning an output message.
 	 * 
 	 * @param input message from client
-	 * @return message to client
 	 */
-	private String handleMessages(String input) {
+	private void handleMessages(String input) {
 		String[] request = input.split(" ");
 
 		// handles username requests
-
 		// Successful username attempt
 		if(request[0].equals("success") && request[1].equals("username")){
 			user = new User(request[2]);
 			mainGUI = new WhiteboardListGUI(this);
 			mainGUI.setTitle("Whiteboard - Logged in as: " + request[2]);	
 			mainGUI.setVisible(true);
-
-			return "success";
 		} else if (request[0].equals("retry") && request[1].equals("username")){
 			// Failed username attempt
-
 			SimplePromptGUI newUsername = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_USERNAME);
 			newUsername.setVisible(true);
-
-			return "--------------------------------------------------------------------------";
 		} else {
 			if (user != null) {
-				//ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
-				//Whiteboard whiteboard = user.getWhiteboard();
 				if(request[0].equals("list") && request[1].equals("whiteboard")) {					
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
 					for (int i = 2; i < request.length; i++) {
 						newWhiteboardNames.add(request[i]);
 					}
 					mainGUI.updateTable(newWhiteboardNames);
-					return "success0";
 				} else if (request[0].equals("list") && 
 						request[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
@@ -174,30 +160,23 @@ public class WhiteboardClient{
 						newUserList.add(request[i]);
 					}
 					user.getWhiteboard(request[2]).setUsers(newUserList);
-					return "success1";
 				} else if (request[0].equals("add")) {
 					user.getWhiteboard(request[2]).addUser(request[3]);
-					return "success2";
 				} else if (request[0].equals("retry") && request[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
-					return "retry whiteboard";
 				} else if (request[0].equals("remove")) {
 					String usernameToRemove = request[3];
-					user.getWhiteboard(request[2]).removeUser(usernameToRemove);
-					return "did removing";			
+					user.getWhiteboard(request[2]).removeUser(usernameToRemove);	
 				} else if (request[0].equals("error")) {
 					mainGUI.throwWhiteboardErrorMessage();
-					return "error";
 				} else if (request[0].equals("success") && request[2].equals("join")) {
 					Canvas canvas = new Canvas(width, height, this, request[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
 					user.addWhiteboard(new Whiteboard(request[3], canvas, initialUsers));
 					user.getWhiteboard(request[3]).display();
-					return "successful join";
 				} else if (request[0].equals("success") && request[2].equals("exit")) {
 					user.removeWhiteboard(request[3]);
-					return "success3";
 				} else if (request[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
@@ -213,15 +192,11 @@ public class WhiteboardClient{
 						int strokeSize = Integer.parseInt(request[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
-						return "success4";
-					} else {
-						return "no whiteboard";
 					}
-
 				}
 			}
+			
 			// Should never get here--make sure to return in each of the valid cases above.
-			System.err.println(input);
 			throw new UnsupportedOperationException();
 		}
 	}
