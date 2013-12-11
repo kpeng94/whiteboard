@@ -46,4 +46,8 @@ public class whiteboardTest {
 		result.add(" ");
 		assertEquals(result, whiteboard.getUsers());
 	}
+	
+	public void isHashSetEqual() {
+		
+	}
 }
