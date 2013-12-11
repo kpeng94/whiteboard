@@ -55,8 +55,6 @@ public class WhiteboardClient{
 			public void run() {
 				try {
 					for (String input = in.readLine(); input != null; input = in.readLine()) {
-						// maybe just calling handleMessage(input) is enough to process the message
-						// then get rid of the String output that handleMessages(input) currently returns.
 						String output = handleMessages(input);
 						System.out.println(output);
 					}
