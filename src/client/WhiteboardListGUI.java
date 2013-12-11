@@ -8,6 +8,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -92,6 +93,13 @@ public class WhiteboardListGUI extends JFrame {
 		for(String s: users){
 			model.addRow(new Object[]{s});
 		}
+	}
+	
+	public void throwWhiteboardErrorMessage(){
+		JOptionPane.showMessageDialog(null, 
+				"Your attempt to join this whiteboard failed. You may already have the window open.",
+				"Your attempt to join this whiteboard failed. You may already have the window open.",
+				JOptionPane.ERROR_MESSAGE);
 	}
 	
 	/**

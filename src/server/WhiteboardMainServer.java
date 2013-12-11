@@ -84,7 +84,7 @@ public class WhiteboardMainServer {
 	        try {
 	            runWhiteboardServer(port);
 	        } catch (IOException e) {
-	            ;
+	            e.printStackTrace();
 	        }
 	    }
 

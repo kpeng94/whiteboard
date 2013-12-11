@@ -77,7 +77,8 @@ public class WhiteboardDataServer extends Thread {
 							if(whiteboard.getUsers().contains(dcUser)){
 								whiteboard.removeUser(dcUser);
 								for(String user: whiteboard.getUsers()){
-									users.get(user).offer(new Packet("remove whiteboard-user " + dcUser));
+									users.get(user).offer(new Packet("remove whiteboard-user " + 
+								whiteboard.getName() + " " + dcUser));
 								}
 							}
 						}
@@ -93,7 +94,7 @@ public class WhiteboardDataServer extends Thread {
 						else{
 							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
 							whiteboards.put(whiteboardName, 
-											new Whiteboard(packetInfo[2], new ArrayList<String>()));
+									new Whiteboard(packetInfo[2], new ArrayList<String>()));
 							for(BlockingQueue<Packet> bq: users.values()){
 								bq.offer(new Packet(createWhiteboardList()));
 							}
@@ -112,15 +113,21 @@ public class WhiteboardDataServer extends Thread {
 							String user = packet.getUser();
 							// Sends messages if the user is joining
 							if(isJoin){
-								users.get(user).offer(new Packet("success whiteboard join " + whiteboardName));
-								for(String otherUsers: whiteboard.getUsers()){
-									users.get(otherUsers).offer(new Packet("add whiteboard-user " + user));
+								if(whiteboard.getUsers().contains(user)){
+									// Users can't join a whiteboard they're already in
+									users.get(user).offer(new Packet("error whiteboard"));
 								}
-								whiteboard.addUser(user);
-								users.get(user).offer(new Packet(createUserList(whiteboardName)));
-								for(LineSegment segment: whiteboard.getLineSegments()){
-									users.get(user).offer(new Packet("draw whiteboard " + whiteboardName
-											 + " " + segment.toString()));
+								else{
+									users.get(user).offer(new Packet("success whiteboard join " + whiteboardName));
+									for(String otherUsers: whiteboard.getUsers()){
+										users.get(otherUsers).offer(new Packet("add whiteboard-user " + whiteboardName + " " + user));
+									}
+									whiteboard.addUser(user);
+									users.get(user).offer(new Packet(createUserList(whiteboardName)));
+									for(LineSegment segment: whiteboard.getLineSegments()){
+										users.get(user).offer(new Packet("draw whiteboard " + whiteboardName
+												+ " " + segment.toString()));
+									}
 								}
 							}
 							// Sends messages if the user is exiting
@@ -128,9 +135,9 @@ public class WhiteboardDataServer extends Thread {
 								// True if the user was actually in the whiteboard, false if the user wasn't
 								boolean success = whiteboard.removeUser(user);
 								if(success){
-									users.get(user).offer(new Packet("success whiteboard exit"));
+									users.get(user).offer(new Packet("success whiteboard exit " + whiteboardName));
 									for(String otherUsers: whiteboard.getUsers()){
-										users.get(otherUsers).offer(new Packet("remove whiteboard-user " + user));
+										users.get(otherUsers).offer(new Packet("remove whiteboard-user " + whiteboardName + " " + user));
 									}
 								}
 								else{
@@ -155,7 +162,7 @@ public class WhiteboardDataServer extends Thread {
 								Integer.parseInt(packetInfo[5]), Integer.parseInt(packetInfo[6]),
 								color, Integer.parseInt(packetInfo[10]));
 						whiteboard.addLineSegment(lineSeg);
-						
+
 						for(String user: whiteboard.getUsers()){
 							users.get(user).offer(new Packet(request));
 						}
@@ -177,8 +184,11 @@ public class WhiteboardDataServer extends Thread {
 		Whiteboard whiteboard = whiteboards.get(whiteboardName);
 		StringBuilder request = new StringBuilder();
 		request.append("list whiteboard-user ");
+		request.append(whiteboardName);
+		request.append(" ");
 		for(String user: whiteboard.getUsers()){
-			request.append(user + " ");
+			request.append(user);
+			request.append(" ");
 		}
 		return request.substring(0, request.length()-1);
 	}
@@ -192,7 +202,8 @@ public class WhiteboardDataServer extends Thread {
 		StringBuilder request = new StringBuilder();
 		request.append("list whiteboard ");
 		for(String whiteboard: whiteboards.keySet()){
-			request.append(whiteboard + " ");
+			request.append(whiteboard);
+			request.append(" ");
 		}
 		return request.substring(0, request.length()-1);
 	}

@@ -1,4 +1,4 @@
-package canvas;
+package client;
 
 import static org.junit.Assert.*;
 

@@ -173,6 +173,10 @@ public class Canvas extends JPanel {
         								 this.strokeWidth);
     }
     
+    public void sendDisconnectToServer(){
+    	whiteboardClient.sendExitWhiteboardMessage(this.name);
+    }
+    
     /*
      * Add the mouse listener that supports the user's freehand drawing.
      */

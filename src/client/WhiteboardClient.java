@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import canvas.Canvas;
 import canvas.LineSegment;
-import canvas.User;
 import canvas.Whiteboard;
 
 public class WhiteboardClient{
@@ -19,16 +18,8 @@ public class WhiteboardClient{
 	// User must be created (become non-null) following a "success username" 
 	private User user = null;
 
-	// list of all available whiteboard names
-	private ArrayList<String> whiteboardNames;
-
-	// user's current whiteboard
-	//private Whiteboard whiteboard;
-
-	// users associated with current whiteboard
-	//private ArrayList<String> whiteboardUsers;
 	private WhiteboardClientMain handler;
-	
+
 	// GUI for listing the whiteboards (i.e. main screen)
 	private WhiteboardListGUI mainGUI;
 
@@ -78,56 +69,67 @@ public class WhiteboardClient{
 		GUIListener.start();
 	}
 
-	// TODO (pzarker): pls.
-	//create methods for sending shit
 	public void sendAddUsernameMessage(String username) {
 		String message = "add username " + username;
-		printServer.println(message);
+		synchronized(printServer){
+			printServer.println(message);	
+		}
 	}
-	
+
 	public void sendDisconnectUsernameMessage() {
 		String message = "disconnect username " + user.getUsername();
-		printServer.println(message);
+		synchronized(printServer){
+			printServer.println(message);	
+		}
 		try {
 			printServer.close();
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
+			;
 		}
 		System.exit(0);
 	}
-	
+
 	public void sendCreateWhiteboardMessage(String name) {
 		String message = "create whiteboard " + name;
-		printServer.println(message);
-	}
-	
-	public void sendJoinWhiteboardMessage(String name) {
-		String message = "join whiteboard " + name;
-		printServer.println(message);
+		synchronized(printServer){
+			printServer.println(message);	
+		}
 	}
 
-	public void sendExitWhiteboardMessage() {
+	public void sendJoinWhiteboardMessage(String name) {
+		String message = "join whiteboard " + name;
+		synchronized(printServer){
+			printServer.println(message);	
+		}
+	}
+
+	public void sendExitWhiteboardMessage(String name) {
 		String message;
 		if (user != null) {
-			message = "exit whiteboard " + user.getWhiteboard().getName();
+			message = "exit whiteboard " + name;
 		} else {
 			message = "exit failure";
 		}
-		
-		printServer.println(message);
+
+		synchronized(printServer){
+			printServer.println(message);	
+		}
 	}
 
 	public void sendDrawMessage(String whiteboardName, int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
 		// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 		// [red] [green] [blue] [stroke size]
 		String message = "draw whiteboard " + whiteboardName + " " + 
-						 String.valueOf(x1) + " " + String.valueOf(y1) + " " + 
-						 String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
-						 String.valueOf(r) + " " + String.valueOf(g) + " " + 
-						 String.valueOf(b) + " " + String.valueOf(strokeSize);
+				String.valueOf(x1) + " " + String.valueOf(y1) + " " + 
+				String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
+				String.valueOf(r) + " " + String.valueOf(g) + " " + 
+				String.valueOf(b) + " " + String.valueOf(strokeSize);
 		System.out.println(message);
-		printServer.println(message);	
+		synchronized(printServer){
+			printServer.println(message);	
+		}
 	}	
 
 	/**
@@ -138,7 +140,7 @@ public class WhiteboardClient{
 	 */
 	private String handleMessages(String input) {
 		String[] commandArgs = input.split(" ");
-		
+
 		// handles username requests
 
 		// Successful username attempt
@@ -147,14 +149,14 @@ public class WhiteboardClient{
 			mainGUI = new WhiteboardListGUI(this);
 			mainGUI.setTitle("Whiteboard - Logged in as: " + commandArgs[2]);	
 			mainGUI.setVisible(true);
-			
+
 			return "success";
 		} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("username")){
 			// Failed username attempt
-			
+
 			SimplePromptGUI newUsername = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_USERNAME);
 			newUsername.setVisible(true);
-			
+
 			return "--------------------------------------------------------------------------";
 		} else {
 			if (user != null) {
@@ -165,29 +167,26 @@ public class WhiteboardClient{
 					for (int i = 2; i < commandArgs.length; i++) {
 						newWhiteboardNames.add(commandArgs[i]);
 					}
-					setWhiteboardNames(newWhiteboardNames);
 					mainGUI.updateTable(newWhiteboardNames);
 					return "success0";
 				} else if (commandArgs[0].equals("list") && 
-						   commandArgs[1].equals("whiteboard-user")) {
+						commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
-					for (int i = 2; i < commandArgs.length; i++) {
+					for (int i = 3; i < commandArgs.length; i++) {
 						newUserList.add(commandArgs[i]);
 					}
-					//whiteboardUsers = newUserList;
-					user.getWhiteboard().setUsers(newUserList);
+					user.getWhiteboard(commandArgs[2]).setUsers(newUserList);
 					return "success1";
 				} else if (commandArgs[0].equals("add")) {
-					//whiteboardUsers.add(commandArgs[2]);
-					user.getWhiteboard().addUser(commandArgs[2]);
+					user.getWhiteboard(commandArgs[2]).addUser(commandArgs[3]);
 					return "success2";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
 					return "retry whiteboard";
 				} else if (commandArgs[0].equals("remove")) {
-					String usernameToRemove = commandArgs[2];
-					ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
+					String usernameToRemove = commandArgs[3];
+					ArrayList<String> whiteboardUsers = user.getWhiteboard(commandArgs[2]).getUsers();
 					int index = whiteboardUsers.indexOf(usernameToRemove);
 					if (index != -1) {
 						whiteboardUsers.remove(index);
@@ -195,30 +194,29 @@ public class WhiteboardClient{
 					}
 					return "fail";			
 				} else if (commandArgs[0].equals("error")) {
+					mainGUI.throwWhiteboardErrorMessage();
 					return "error";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
 					Canvas canvas = new Canvas(width, height, this, commandArgs[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
-					// TODO: add line segments here obtained from the server
-					user.setWhiteboard(new Whiteboard(commandArgs[3], canvas, initialUsers));
-					//whiteboard = new Whiteboard(commandArgs[3], canvas, initialUsers);
-					user.getWhiteboard().display();
+					user.addWhiteboard(new Whiteboard(commandArgs[3], canvas, initialUsers));
+					user.getWhiteboard(commandArgs[3]).display();
 					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
-					user.setWhiteboard(null);
+					user.removeWhiteboard(commandArgs[3]);
 					return "success3";
 				} else if (commandArgs[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
-					Whiteboard whiteboard = user.getWhiteboard();
+					Whiteboard whiteboard = user.getWhiteboard(commandArgs[2]);
 					if (whiteboard != null) {
 						int x1 = Integer.parseInt(commandArgs[3]);
 						int y1 = Integer.parseInt(commandArgs[4]);
 						int x2 = Integer.parseInt(commandArgs[5]);
 						int y2 = Integer.parseInt(commandArgs[6]);
 						Color color = new Color(Integer.parseInt(commandArgs[7]), 
-												Integer.parseInt(commandArgs[8]), 
-												Integer.parseInt(commandArgs[9]));
+								Integer.parseInt(commandArgs[8]), 
+								Integer.parseInt(commandArgs[9]));
 						int strokeSize = Integer.parseInt(commandArgs[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
@@ -233,14 +231,5 @@ public class WhiteboardClient{
 			System.err.println(input);
 			throw new UnsupportedOperationException();
 		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> getWhiteboardNames() {
-		return (ArrayList<String>) whiteboardNames.clone();
-	}
-
-	public void setWhiteboardNames(ArrayList<String> whiteboardNames) {
-		this.whiteboardNames = whiteboardNames;
 	}
 }

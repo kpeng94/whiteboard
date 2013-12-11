@@ -67,7 +67,8 @@ public class WhiteboardServerThread extends Thread {
 						}
 					}
 				} catch (IOException e){
-					;	
+					// Tell the server that the client has disappeared
+					toServerQ.add(new Packet(userName, "disconnect username " + userName));
 				}
 			}
 		});
