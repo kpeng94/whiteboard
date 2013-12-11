@@ -17,6 +17,7 @@ import client.Canvas;
  *
  */
 public class WhiteboardTest {
+	// test default values for getName() and getUsers()
 	@Test
 	public void testGetName() {
 		int width = 800; 
@@ -27,6 +28,7 @@ public class WhiteboardTest {
 		assertTrue(whiteboard.getUsers().equals(new HashSet<String>()));
 	}
 	
+	// test adding multiple users using ascii characters and spaces
 	@Test
 	public void testAddGetUsers() {
 		int width = 800; 
@@ -49,6 +51,7 @@ public class WhiteboardTest {
 		assertTrue(result.equals(whiteboard.getUsers()));
 	}
 	
+	// test removing users
 	@Test
 	public void testRemoveUsers() {
 		int width = 800; 
@@ -69,6 +72,29 @@ public class WhiteboardTest {
 		assertTrue(result.equals(whiteboard.getUsers()));
 	}
 	
+	// test removing a user that isn't in User hashSet
+		@Test
+		public void testRemoveUsersFailure() {
+			int width = 800; 
+			int height = 600;
+			Canvas canvas = new Canvas(width, height);
+			Whiteboard whiteboard = new Whiteboard("", canvas);
+			whiteboard.addUser("genghis");
+			whiteboard.addUser("kevin");
+			whiteboard.addUser(" ");
+			boolean failure = whiteboard.removeUser("whatever");
+			assertFalse(failure);
+			
+			HashSet<String> result = new HashSet<String>();
+			result.add("genghis");
+			result.add(" ");
+			result.add("kevin");
+			
+			assertTrue(result.equals(whiteboard.getUsers()));
+		}
+	
+	// test setting users
+	// TODO determine if setUsers() adds to existing HashSet or replaces it
 	@Test
 	public void testSetUsers() {
 		int width = 800; 
@@ -84,6 +110,7 @@ public class WhiteboardTest {
 		assertTrue(newUsers.equals(whiteboard.getUsers()));
 	}
 	
+	// test what happens when adding a user that already exists in HashSet
 	@Test
 	public void testAddUserExistingEntry() {
 		int width = 800; 
@@ -98,6 +125,7 @@ public class WhiteboardTest {
 		assertTrue(result.equals(whiteboard.getUsers()));
 	}
 	
+	// tests adding and getting a line segment
 	// TODO got nullPointerException when canvas != null; possible rep invariant?
 	@Test
 	public void testAddGetLineSegment() {
