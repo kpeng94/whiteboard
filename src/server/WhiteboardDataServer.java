@@ -49,7 +49,6 @@ public class WhiteboardDataServer extends Thread {
 								for(String user: whiteboard.getUsers()){
 									users.get(user).offer(new Packet(false, "remove whiteboard-user " + dcUser));
 								}
-								break;
 							}
 						}
 					}
