@@ -5,12 +5,24 @@ import java.util.HashMap;
 import whiteboard.Whiteboard;
 
 /**
- * Represents a user 
+ * User is the abstract datatype that represents a client.
+ * User is set to null before a client connects, and is initialized when a client types 
+ * 		in a username that has not already been taken by another user.
+ * User contains information about the boards it is currently connected to (has opened), 
+ * 		and its username (which is a unique identifier).
+ * 
+ * Rep Invariant: none of the whiteboards in whiteboards is null.
  */
 public class User {
 
 	private HashMap<String, Whiteboard> whiteboards;
 	private final String username;
+	
+	public void checkRep() {
+		for (Whiteboard board : whiteboards.values()) {
+			assert board != null;
+		}
+	}
 	
 	/**
 	 * Constructor for user.
