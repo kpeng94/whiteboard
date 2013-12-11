@@ -15,16 +15,13 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 /**
-<<<<<<< HEAD
  * GUI for listing the whiteboards on the server.
  * This is a client's view; the client has an option to
  * add a new whiteboard, join an existing one, or logout.
-=======
  * The Whiteboard List GUI displays the current list of
  * whiteboards that the server contains. The list is updated
  * each time a user creates a new whiteboard.
  *
->>>>>>> 9ca25332fd7c16874d2a047031765b273aa49f32
  */
 @SuppressWarnings("serial")
 public class WhiteboardListGUI extends JFrame {
@@ -89,7 +86,7 @@ public class WhiteboardListGUI extends JFrame {
 		pack();
 	}
 	
-	// THIS MAY BE CHANGED LATER ::
+	// THIS MAY BE CHANGED LATER :: (TODO)
 	public void updateTable(ArrayList<String> users){
 		model.setRowCount(0);
 		for(String s: users){

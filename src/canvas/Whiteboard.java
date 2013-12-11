@@ -32,27 +32,26 @@ public class Whiteboard {
 	 * @param canvas The canvas associated with the whiteboard
 	 * @param users The list of users who are currently accessing this whiteboard
 	 */
+	public Whiteboard(String name, ArrayList<String> users) {
+		this.name = name;
+		this.users = users;
+		this.canvas = null;
+		this.lineSegments = new ArrayList<LineSegment>();
+	}
+
+	
+	/**
+	 * Constructor for a new whiteboard object
+	 * @param title Name of the whiteboard
+	 * @param canvas The canvas associated with the whiteboard
+	 * @param users The list of users who are currently accessing this whiteboard
+	 */
 	public Whiteboard(String name, Canvas canvas, ArrayList<String> users) {
 		this.name = name;
 		this.canvas = canvas;
 		this.users = users;
 		this.lineSegments = new ArrayList<LineSegment>();
 	}
-
-	/**
-	 * Constructor for a new whiteboard object
-	 * @param title Name of the whiteboard
-	 * @param canvas The canvas associated with the whiteboard
-	 * @param users The list of users who are currently accessing this whiteboard
-	 * @param lineSegments The list of segments that are already on this whiteboard
-	 */
-	public Whiteboard(String name, Canvas canvas, ArrayList<String> users, 
-					  ArrayList<LineSegment> lineSegments) {
-		this.name = name;
-		this.canvas = canvas;
-		this.users = users;
-		this.lineSegments = lineSegments;
-	}	
 	
     /**
      * Returns the name of the whiteboard.
@@ -100,7 +99,10 @@ public class Whiteboard {
      * @param lineSegment Line segment to add
      */
     public void addLineSegment(LineSegment lineSegment) {
-    	this.canvas.drawLineSegment(lineSegment);
+    	this.lineSegments.add(lineSegment);
+    	if (this.canvas != null) {
+        	this.canvas.drawLineSegment(lineSegment);    		
+    	}
     }
     
     public ArrayList<LineSegment> getLineSegments() {

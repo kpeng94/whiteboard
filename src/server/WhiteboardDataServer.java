@@ -7,7 +7,6 @@ import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import canvas.Canvas;
 import canvas.LineSegment;
 import canvas.Whiteboard;
 
@@ -93,7 +92,8 @@ public class WhiteboardDataServer extends Thread {
 						// If name is okay, tell all clients a new whiteboard was made and create the whiteboard
 						else{
 							String whiteboardName = packetInfo[2].toLowerCase(Locale.ENGLISH);
-							whiteboards.put(whiteboardName, new Whiteboard(packetInfo[2], new Canvas(800,600), new ArrayList<String>()));
+							whiteboards.put(whiteboardName, 
+											new Whiteboard(packetInfo[2], new ArrayList<String>()));
 							for(BlockingQueue<Packet> bq: users.values()){
 								bq.offer(new Packet(createWhiteboardList()));
 							}

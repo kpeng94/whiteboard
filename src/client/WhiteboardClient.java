@@ -112,10 +112,10 @@ public class WhiteboardClient{
 		printServer.println(message);
 	}
 
-	public void sendDrawMessage(int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
+	public void sendDrawMessage(String whiteboardName, int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
 		// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 		// [red] [green] [blue] [stroke size]
-		String message = "draw whiteboard " + whiteboard.getName() + " " + 
+		String message = "draw whiteboard " + whiteboardName + " " + 
 						 String.valueOf(x1) + " " + String.valueOf(y1) + " " + 
 						 String.valueOf(x2) + " " + String.valueOf(y2) + " " + 
 						 String.valueOf(r) + " " + String.valueOf(g) + " " + 
@@ -186,10 +186,10 @@ public class WhiteboardClient{
 				} else if (commandArgs[0].equals("error")) {
 					return "error";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("join")) {
-					Canvas canvas = new Canvas(width, height, this);
+					Canvas canvas = new Canvas(width, height, this, commandArgs[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
 					// TODO: add line segments here obtained from the server
-					whiteboard = new Whiteboard(commandArgs[2], canvas, initialUsers);
+					whiteboard = new Whiteboard(commandArgs[3], canvas, initialUsers);
 					whiteboard.display();
 					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {

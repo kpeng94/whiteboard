@@ -26,6 +26,7 @@ public class Canvas extends JPanel {
     private int strokeWidth;
     private final WhiteboardClient whiteboardClient;
     private boolean isEraserModeOn = false;
+    private String name;
     
     /**
      * Constructor for a canvas.
@@ -40,7 +41,7 @@ public class Canvas extends JPanel {
         // This can be null if its the server's constructor
         this.whiteboardClient = null;
 
-        addDrawingController();
+        //addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
@@ -51,12 +52,14 @@ public class Canvas extends JPanel {
      * @param width width in pixels
      * @param height height in pixels
      * @param whiteboardClient client associated with this canvas
+     * @param name
      */
-    public Canvas(int width, int height, WhiteboardClient whiteboardClient) {
+    public Canvas(int width, int height, WhiteboardClient whiteboardClient, String name) {
     	this.color = Color.BLACK;
     	this.strokeWidth = 3;
         this.setPreferredSize(new Dimension(width, height));
         this.whiteboardClient = whiteboardClient;
+        this.name = name;
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
@@ -140,13 +143,14 @@ public class Canvas extends JPanel {
     }    
     
     public void drawLineSegment(LineSegment lineSegment) {
-        Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+        g.setColor(lineSegment.getColor());
         g.setStroke(new BasicStroke(lineSegment.getStrokeSize()));
         g.drawLine(lineSegment.getStartPoint().x, lineSegment.getStartPoint().y,
         		   lineSegment.getEndPoint().x, lineSegment.getEndPoint().y);
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
-        this.repaint();
+        this.repaint();      
     }
     
     /*
@@ -161,7 +165,7 @@ public class Canvas extends JPanel {
         } else {        	
             color = this.color;
         }
-        whiteboardClient.sendDrawMessage(x1, y1, x2, y2, color.getRed(), 
+        whiteboardClient.sendDrawMessage(this.name, x1, y1, x2, y2, color.getRed(), 
         								 color.getGreen(), color.getBlue(), 
         								 this.strokeWidth);
     }
