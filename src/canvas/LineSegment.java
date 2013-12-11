@@ -61,4 +61,12 @@ public class LineSegment {
 	public int getStrokeSize() {
 		return strokeSize;
 	}
+	
+	/**
+	 * Returns a String representation of the line segment
+	 */
+	public String toString(){
+		return start.x + " " + start.y + " " + end.x + " " + end.y + " " + color.getRed() + " "
+				+ color.getGreen() + " " + color.getBlue() + " " + strokeSize;
+	}
 }

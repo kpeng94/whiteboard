@@ -23,10 +23,10 @@ public class WhiteboardClient{
 	private ArrayList<String> whiteboardNames;
 
 	// user's current whiteboard
-	private Whiteboard whiteboard;
+	//private Whiteboard whiteboard;
 
 	// users associated with current whiteboard
-	private ArrayList<String> whiteboardUsers;
+	//private ArrayList<String> whiteboardUsers;
 	private WhiteboardClientMain handler;
 	
 	// GUI for listing the whiteboards (i.e. main screen)
@@ -108,7 +108,13 @@ public class WhiteboardClient{
 	}
 
 	public void sendExitWhiteboardMessage() {
-		String message = "exit whiteboard " + whiteboard.getName();
+		String message;
+		if (user != null) {
+			message = "exit whiteboard " + user.getWhiteboard().getName();
+		} else {
+			message = "exit failure";
+		}
+		
 		printServer.println(message);
 	}
 
@@ -152,6 +158,8 @@ public class WhiteboardClient{
 			return "--------------------------------------------------------------------------";
 		} else {
 			if (user != null) {
+				//ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
+				//Whiteboard whiteboard = user.getWhiteboard();
 				if(commandArgs[0].equals("list") && commandArgs[1].equals("whiteboard")) {					
 					ArrayList<String> newWhiteboardNames = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
@@ -159,24 +167,27 @@ public class WhiteboardClient{
 					}
 					setWhiteboardNames(newWhiteboardNames);
 					mainGUI.updateTable(newWhiteboardNames);
-					return "success";
+					return "success0";
 				} else if (commandArgs[0].equals("list") && 
 						   commandArgs[1].equals("whiteboard-user")) {
 					ArrayList<String> newUserList = new ArrayList<String>();
 					for (int i = 2; i < commandArgs.length; i++) {
 						newUserList.add(commandArgs[i]);
 					}
-					whiteboardUsers = newUserList;
-					return "success";
+					//whiteboardUsers = newUserList;
+					user.getWhiteboard().setUsers(newUserList);
+					return "success1";
 				} else if (commandArgs[0].equals("add")) {
-					whiteboardUsers.add(commandArgs[2]);
-					return "success";
+					//whiteboardUsers.add(commandArgs[2]);
+					user.getWhiteboard().addUser(commandArgs[2]);
+					return "success2";
 				} else if (commandArgs[0].equals("retry") && commandArgs[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);
 					return "retry whiteboard";
 				} else if (commandArgs[0].equals("remove")) {
 					String usernameToRemove = commandArgs[2];
+					ArrayList<String> whiteboardUsers = user.getWhiteboard().getUsers();
 					int index = whiteboardUsers.indexOf(usernameToRemove);
 					if (index != -1) {
 						whiteboardUsers.remove(index);
@@ -189,15 +200,17 @@ public class WhiteboardClient{
 					Canvas canvas = new Canvas(width, height, this, commandArgs[3]);
 					ArrayList<String> initialUsers = new ArrayList<String>();
 					// TODO: add line segments here obtained from the server
-					whiteboard = new Whiteboard(commandArgs[3], canvas, initialUsers);
-					whiteboard.display();
+					user.setWhiteboard(new Whiteboard(commandArgs[3], canvas, initialUsers));
+					//whiteboard = new Whiteboard(commandArgs[3], canvas, initialUsers);
+					user.getWhiteboard().display();
 					return "successful join";
 				} else if (commandArgs[0].equals("success") && commandArgs[2].equals("exit")) {
-					whiteboard = null;
-					return "success";
+					user.setWhiteboard(null);
+					return "success3";
 				} else if (commandArgs[0].equals("draw")) {
 					// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 					// 				   [red] [green] [blue] [stroke size]
+					Whiteboard whiteboard = user.getWhiteboard();
 					if (whiteboard != null) {
 						int x1 = Integer.parseInt(commandArgs[3]);
 						int y1 = Integer.parseInt(commandArgs[4]);
@@ -209,7 +222,7 @@ public class WhiteboardClient{
 						int strokeSize = Integer.parseInt(commandArgs[10]);
 						LineSegment lineSegment = new LineSegment(x1, y1, x2, y2, color, strokeSize);
 						whiteboard.addLineSegment(lineSegment);
-						return "success";
+						return "success4";
 					} else {
 						return "no whiteboard";
 					}

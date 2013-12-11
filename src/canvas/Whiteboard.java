@@ -77,6 +77,13 @@ public class Whiteboard {
     }
     
     /**
+     * Replaces users of whiteboard with new list of users
+     */
+    public void setUsers(ArrayList<String> newUsers) {
+    	users = newUsers;
+    }
+    
+    /**
      * Adds user to the list of users
      * @param user User to add
      */
@@ -117,8 +124,7 @@ public class Whiteboard {
      * Displays this whiteboard.
      */
     public void display() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+		
                 final JFrame window = new JFrame(name);
                     window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     window.setLayout(new BorderLayout());
@@ -180,8 +186,7 @@ public class Whiteboard {
             		}
             		window.add(guessTable, BorderLayout.EAST);
             		window.setVisible(true);
-    			}			
-    		});
+    		
     }
     
 }

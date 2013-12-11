@@ -143,6 +143,9 @@ public class Canvas extends JPanel {
     }    
     
     public void drawLineSegment(LineSegment lineSegment) {
+    	if (drawingBuffer == null) {
+    		makeDrawingBuffer();
+    	}
         final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         g.setColor(lineSegment.getColor());
         g.setStroke(new BasicStroke(lineSegment.getStrokeSize()));
@@ -170,8 +173,6 @@ public class Canvas extends JPanel {
         								 this.strokeWidth);
     }
     
-    
-    
     /*
      * Add the mouse listener that supports the user's freehand drawing.
      */
@@ -180,7 +181,6 @@ public class Canvas extends JPanel {
         addMouseListener(controller);
         addMouseMotionListener(controller);
     }
-    
     
     /*
      * DrawingController handles the user's freehand drawing.
@@ -218,90 +218,4 @@ public class Canvas extends JPanel {
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
     }
-    
-//    public void display(ArrayList<String> users) {
-//    	final ArrayList<String> listOfUsers = users;
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//                final JFrame window = new JFrame("Freehand Canvas");
-//                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                window.setLayout(new BorderLayout());
-//                window.setResizable(false);
-//                window.setSize(907, 600); // A little buffering for division between
-//                						  // list of users and canvas
-//                
-//                // Add toolbar
-//                JToolBar toolbar = new JToolBar("Bar");
-//            	window.add(toolbar, BorderLayout.NORTH);
-//                toolbar.setFloatable(false);
-//                final Canvas canvas = new Canvas(800, 600);
-//                
-//                // Toolbar buttons
-//                // Color Picker
-//                JButton colorButton = new JButton("Choose Color");
-//            	toolbar.add(colorButton);
-//            	colorButton.addActionListener(new ActionListener() {
-//        			public void actionPerformed(ActionEvent event) {
-//        				Color color = JColorChooser.showDialog(window, "Choose Background Color", Color.WHITE);
-//        				if (color != null) {
-//        					canvas.setColor(color);
-//        				}
-//        			}
-//            	});
-//            	
-//            	// Eraser Icon
-//        		ImageIcon eraserIcon = new ImageIcon("img/eraser.png");
-//                JToggleButton eraserPicker = new JToggleButton("eraser", eraserIcon, false);
-//            	toolbar.add(eraserPicker);
-//            	eraserPicker.addActionListener(new ActionListener() {
-//            		public void actionPerformed(ActionEvent event) {
-//            			canvas.toggleEraserMode();
-//                	}            	
-//        		});
-//
-//            	JSlider strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
-//            	toolbar.add(strokeSlider);
-//            	strokeSlider.addChangeListener(new ChangeListener() {
-//            		public void stateChanged(ChangeEvent c) {
-//            			JSlider s = (JSlider) c.getSource();
-//            			canvas.setStrokeWidth(s.getValue());
-//            		}
-//            	});
-//            	
-//            	// Add canvas
-//                window.add(canvas, BorderLayout.WEST);
-//
-//                // Add users list
-//
-//                //   guests.add("Genghis");
-//            	String[] tableColumns = {"Guests"}; 
-//            	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
-//        		JTable guessTable = new JTable(guessTableModel);
-//            	TableColumn column = guessTable.getColumnModel().getColumn(0);
-//            	column.setPreferredWidth(100);
-//        		guessTableModel.addRow(new Object[]{"Guests In Here"});
-//        		for (int i = 0; i < listOfUsers.size(); i++) {
-//        			guessTableModel.addRow(new Object[]{listOfUsers.get(i)});
-//        		}
-//        		window.add(guessTable, BorderLayout.EAST);
-//        		window.setVisible(true);
-//			}			
-//		});
-//    }
-//    public void displayListOfGuests(ArrayList<String> guests, JFrame window) {
-//    	String[] tableColumns = {"Guests"}; 
-//    	DefaultTableModel guessTableModel = new DefaultTableModel(tableColumns, 0);
-//		JTable guessTable = new JTable(guessTableModel);
-//    	TableColumn column = guessTable.getColumnModel().getColumn(0);
-//    	column.setPreferredWidth(100);
-//		guessTableModel.addRow(new Object[]{"Guests In Here"});
-//		for (int i = 0; i < guests.size(); i++) {
-//			guessTableModel.addRow(new Object[]{guests.get(i)});
-//		}
-//		window.add(guessTable, BorderLayout.EAST);
-//    }
-    
-	public static void main(final String[] args) {
-
-	}	
 }
