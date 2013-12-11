@@ -81,7 +81,7 @@ public class WhiteboardGUI extends JFrame {
 		});
 
 		// Add stroke slider
-		strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 30, 5);
+		strokeSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 5);
 		toolbar.add(strokeSlider);
 		strokeSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent c) {
