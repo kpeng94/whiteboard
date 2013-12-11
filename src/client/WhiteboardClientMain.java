@@ -11,11 +11,6 @@ public class WhiteboardClientMain {
 		client.sendAddUsernameMessage(userName);
 	}
 	
-	public void retryUsername(){
-		SimplePromptGUI newUsername = new SimplePromptGUI(client, SimplePromptGUI.REPROMPT_USERNAME);
-		newUsername.setVisible(true);
-	}
-	
 	public static void main(String[] args){
 		LoginGUI login = new LoginGUI(new WhiteboardClientMain());
 		login.setVisible(true);
