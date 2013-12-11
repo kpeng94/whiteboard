@@ -52,10 +52,13 @@ public class LoginGUI extends JFrame {
 		displayPort = new JLabel("Server Port");
 		displayUserName = new JLabel("Username");
 
-		typeIP = new JTextField("localhost");
+		typeIP = new JTextField("");
+		typeIP.addActionListener(new OKListener());
 		typePort = new JTextField("4444");
+		typePort.addActionListener(new OKListener());
 		typeUserName = new JTextField("");
-
+		typeUserName.addActionListener(new OKListener());
+		
 		ok = new JButton("OK");
 		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");
@@ -91,8 +94,8 @@ public class LoginGUI extends JFrame {
 	
 	public void throwErrorMessage(){
 		JOptionPane.showMessageDialog(null, 
-				"Your connection was refused or is invalid. Check your IP and port.",
-				"Your connection was refused or is invalid. Check your IP and port.",
+				"Your connection was refused or is invalid. Check your IP/port, or your firewall.",
+				"Your connection was refused or is invalid. Check your IP.port, or your firewall.",
 				JOptionPane.ERROR_MESSAGE);
 		ok.setEnabled(true);
 		cancel.setEnabled(true);

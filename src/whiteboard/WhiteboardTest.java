@@ -1,4 +1,4 @@
-package canvas;
+package whiteboard;
 
 import static org.junit.Assert.*;
 
@@ -6,26 +6,22 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import client.Canvas;
+
 /**
  * Tests that methods of the whiteboard ADT function correctly.
  * Tests: getName(), setName(), addUsers(), getUsers(), removeUser()
  * Types of strings to test: empty string, special characters, normal names
  *
  */
-public class whiteboardTest {
+public class WhiteboardTest {
 	@Test
-	public void testGetSetName() {
+	public void testGetName() {
 		int width = 800; int height = 600;
 		Canvas canvas = new Canvas(width, height);
 		ArrayList<String> users = new ArrayList<String>();
-		Whiteboard whiteboard = new Whiteboard("", canvas, users);
-		assertEquals("", whiteboard.getName());
-		
-		whiteboard.setName("name");
-		assertEquals("name", whiteboard.getName());
-		
-		whiteboard.setName(" ");
-		assertEquals(" ", whiteboard.getName());
+		Whiteboard whiteboard = new Whiteboard("testName", canvas, users);
+		assertEquals("testName", whiteboard.getName());
 	}
 	
 	@Test

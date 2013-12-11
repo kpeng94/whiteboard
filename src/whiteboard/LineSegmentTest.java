@@ -1,4 +1,4 @@
-package canvas;
+package whiteboard;
 
 import static org.junit.Assert.*;
 

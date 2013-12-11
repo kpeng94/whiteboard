@@ -73,6 +73,7 @@ public class SimplePromptGUI extends JFrame {
 		}
 		
 		inputName = new JTextField();
+		inputName.addActionListener(new OKListener());
 		ok = new JButton("OK");
 		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");

@@ -9,9 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import canvas.Canvas;
-import canvas.LineSegment;
-import canvas.Whiteboard;
+import whiteboard.LineSegment;
+import whiteboard.Whiteboard;
 
 public class WhiteboardClient{
 	private final Socket socket;
@@ -29,6 +28,11 @@ public class WhiteboardClient{
 	private PrintWriter printServer;
 	private BufferedReader readServer;
 
+	/**
+	 * Constructor for a whiteboard client.
+	 * @param initiate Helpers manage the whiteboard client
+	 * @param clientSocket Socket for the client to connect to
+	 */
 	public WhiteboardClient(WhiteboardClientMain initiate, Socket clientSocket){
 		socket = clientSocket;
 		try {
@@ -37,7 +41,7 @@ public class WhiteboardClient{
 		} catch (IOException e) {
 			throw new RuntimeException("IO failed");
 		}
-		handleConnection();
+		handleServerRequests();
 	}
 
 	/**
@@ -45,7 +49,7 @@ public class WhiteboardClient{
 	 * 
 	 * @throws IOException if connection has an error or terminates unexpectedly
 	 */
-	private void handleConnection(){
+	private void handleServerRequests(){
 		final BufferedReader in = readServer;
 
 		Thread GUIListener = new Thread(new Runnable() {
@@ -56,14 +60,18 @@ public class WhiteboardClient{
 						handleMessages(input);
 					}
 				} catch (IOException e) {
-					
+					e.printStackTrace();
 				}
 			}
 		});
 
 		GUIListener.start();
 	}
-
+	
+	/**
+	 * Sends a message to the server to add a username
+	 * @param username Username to add
+	 */
 	public void sendAddUsernameMessage(String username) {
 		String message = "add username " + username;
 		synchronized(printServer){
@@ -71,6 +79,9 @@ public class WhiteboardClient{
 		}
 	}
 
+	/**
+	 * Sends a message to disconnect a username
+	 */
 	public void sendDisconnectUsernameMessage() {
 		String message = "disconnect username " + user.getUsername();
 		synchronized(printServer){
@@ -81,11 +92,15 @@ public class WhiteboardClient{
 			readServer.close();
 			socket.close();
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 		System.exit(0);
 	}
 
+	/**
+	 * Sends a message to create a new whiteboard
+	 * @param name Name of whiteboard
+	 */
 	public void sendCreateWhiteboardMessage(String name) {
 		String message = "create whiteboard " + name;
 		synchronized(printServer){
@@ -93,6 +108,10 @@ public class WhiteboardClient{
 		}
 	}
 
+	/**
+	 * Sends a message to join an existing whiteboard
+	 * @param name Name of whiteboard
+	 */
 	public void sendJoinWhiteboardMessage(String name) {
 		String message = "join whiteboard " + name;
 		synchronized(printServer){
@@ -100,6 +119,10 @@ public class WhiteboardClient{
 		}
 	}
 
+	/**
+	 * Sends a message to exit a whiteboard
+	 * @param name Name of whiteboard
+	 */
 	public void sendExitWhiteboardMessage(String name) {
 		String message;
 		if (user != null) {
@@ -113,7 +136,20 @@ public class WhiteboardClient{
 		}
 	}
 
-	public void sendDrawMessage(String whiteboardName, int x1, int y1, int x2, int y2, int r, int g, int b, int strokeSize) {
+	/**
+	 * Sends a message to draw a line on a whiteboard
+	 * @param whiteboardName Name of whiteboard to draw on
+	 * @param x1 Starting x-coordinate
+	 * @param y1 Starting y-coordinate
+	 * @param x2 Ending x-coordinate
+	 * @param y2 Ending y-coordinate
+	 * @param r Red values
+	 * @param g Green values
+	 * @param b Blue values
+	 * @param strokeSize Size of the stroke
+	 */
+	public void sendDrawMessage(String whiteboardName, int x1, int y1, int x2, int y2, 
+								int r, int g, int b, int strokeSize) {
 		// draw whiteboard [WHITEBOARD NAME] [x1] [y1] [x2] [y2] 
 		// [red] [green] [blue] [stroke size]
 		String message = "draw whiteboard " + whiteboardName + " " + 
@@ -158,11 +194,23 @@ public class WhiteboardClient{
 						request[1].equals("whiteboard-user")) {
 					HashSet<String> newUserList = new HashSet<String>();
 					for (int i = 3; i < request.length; i++) {
+						// Adds a message if the user is you
+						if(request[i].equals(user.getUsername())){
+							request[i] += " (me!)";
+						}
 						newUserList.add(request[i]);
 					}
 					user.getWhiteboard(request[2]).setUsers(newUserList);
-				} else if (request[0].equals("add")) {
+				} else if (request[0].equals("add") &&
+						request[1].equals("whiteboard")) {
+					mainGUI.addWhiteboard(request[2]);
+				} else if (request[0].equals("add") &&
+						request[1].equals("whiteboard-user")) {
+					if(request[3].equals(user.getUsername())){
+						request[3] += " (me!)";
+					}
 					user.getWhiteboard(request[2]).addUser(request[3]);
+
 				} else if (request[0].equals("retry") && request[1].equals("whiteboard")) {
 					SimplePromptGUI newWhiteboard = new SimplePromptGUI(this, SimplePromptGUI.REPROMPT_WHITEBOARD);
 					newWhiteboard.setVisible(true);

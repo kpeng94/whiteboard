@@ -1,7 +1,8 @@
 package client;
 
 import java.util.HashMap;
-import canvas.Whiteboard;
+
+import whiteboard.Whiteboard;
 
 /**
  * TODO: describe the ADT, RI

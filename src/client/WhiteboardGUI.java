@@ -1,4 +1,4 @@
-package canvas;
+package client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,7 +38,7 @@ public class WhiteboardGUI extends JFrame {
 	 * Constructor for whiteboard GUI
 	 * @param canvas The canvas to display in the GUI
 	 */
-	public WhiteboardGUI(final Canvas canvas){
+	public WhiteboardGUI(final Canvas canvas, String whiteboardName){
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -49,8 +49,6 @@ public class WhiteboardGUI extends JFrame {
 		});
 		setLayout(new BorderLayout());
 		setResizable(false);
-		setSize(907, 600); // A little buffering for division between
-		// list of users and canvas
 
 		// Add toolbar
 		toolbar = new JToolBar("Bar");
@@ -110,6 +108,7 @@ public class WhiteboardGUI extends JFrame {
 		scrollPane = new JScrollPane(table);
 		
 		add(scrollPane, BorderLayout.CENTER);
+		setTitle(whiteboardName);
 		
 		pack();
 		setVisible(true);
