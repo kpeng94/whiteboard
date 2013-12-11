@@ -97,6 +97,7 @@ public class MessagePassingTest {
 
     	    out.println("disconnect username parker");
     	    
+    	    sock2.close();
     	    sock.close();
             
         } catch (SocketTimeoutException e) {

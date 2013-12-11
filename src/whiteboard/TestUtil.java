@@ -12,7 +12,7 @@ import server.WhiteboardMainServer;
 
 public class TestUtil {
     
-    private static final int port = 4444;
+    private static final int port = 1234;
     private static final String portStr = Integer.toString(port);
     
     /**
