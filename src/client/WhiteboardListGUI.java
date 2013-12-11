@@ -1,4 +1,4 @@
- package client;
+package client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,26 +15,37 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 /**
+<<<<<<< HEAD
  * GUI for listing the whiteboards on the server.
  * This is a client's view; the client has an option to
  * add a new whiteboard, join an existing one, or logout.
+=======
+ * The Whiteboard List GUI displays the current list of
+ * whiteboards that the server contains. The list is updated
+ * each time a user creates a new whiteboard.
+ *
+>>>>>>> 9ca25332fd7c16874d2a047031765b273aa49f32
  */
 @SuppressWarnings("serial")
 public class WhiteboardListGUI extends JFrame {
 	
-	private final JScrollPane scrollPane;
 	private final JLabel label;
 	private final JTable table;
+	private final JScrollPane scrollPane;
 	private final DefaultTableModel model;
+	
 	private final JButton createWhiteboard;
 	private final JButton selectWhiteboard;
 	private final JButton logout;
+	
+	// Provides the ability for the GUI to relay information back to the server.
 	private final WhiteboardClient client;
 	
 	public WhiteboardListGUI(WhiteboardClient clientSocket){
 		client = clientSocket;
 		
 		label = new JLabel("Select the whiteboard to join, or create a new one.");
+		
 		createWhiteboard = new JButton("New Whiteboard");
 		createWhiteboard.addActionListener(new WhiteboardCreateListener());
 
@@ -46,17 +57,15 @@ public class WhiteboardListGUI extends JFrame {
 		
 		model = new DefaultTableModel(new Object[]{"Whiteboard Name"}, 0);
 		table = new JTable(model){
-
-			public boolean isCellEditable(int row, int column) {
+			public boolean isCellEditable(int row, int column) {                
 				return false;               
 			}
 		};
-		scrollPane = new JScrollPane(table);
 		table.setShowGrid(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane = new JScrollPane(table);
 		
 		setResizable(false);
-		setTitle("Whiteboards");
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -80,6 +89,7 @@ public class WhiteboardListGUI extends JFrame {
 		pack();
 	}
 	
+	// THIS MAY BE CHANGED LATER ::
 	public void updateTable(ArrayList<String> users){
 		model.setRowCount(0);
 		for(String s: users){
@@ -87,8 +97,12 @@ public class WhiteboardListGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * An action listener for the "Create Whiteboard" button on the whiteboard list.
+	 * Will create a new prompt for the user to enter the name of the whiteboard
+	 * they would like to create.
+	 */
 	private class WhiteboardCreateListener implements ActionListener{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			SimplePromptGUI prompt = new SimplePromptGUI(client, SimplePromptGUI.PROMPT_WHITEBOARD);
@@ -111,6 +125,11 @@ public class WhiteboardListGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * An action listener for the "Logout" button on the whiteboard list.
+	 * Will send a disconnect user message to the server and appropriately
+	 * end the program, closing any other windows that may be open.
+	 */
 	private class LogoutListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){

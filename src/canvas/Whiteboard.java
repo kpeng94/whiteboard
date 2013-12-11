@@ -89,9 +89,10 @@ public class Whiteboard {
     /**
      * Removes user from the list of users
      * @param user User to remove
+     * @return if removal was successful
      */
-    public void removeUser(String user) {
-        users.remove(user);
+    public boolean removeUser(String user) {
+        return users.remove(user);
     }
     
     /**

@@ -9,14 +9,24 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Handles connecting users and is the start point for the 
+ * whiteboard server. After creating the data server on a different
+ * thread, the instance will be used exclusively to listen 
+ * to a server port and accept incoming connections from clients.
+ * This class does not perform any of the whiteboard data processing;
+ * instead, WhiteboardDataServer handles all messages and whiteboard
+ * data.
+ *
+ */
 public class WhiteboardMainServer {
 	   private final ServerSocket serverSocket;
 	   private final LinkedBlockingQueue<Packet> blockQ;
 	   private final WhiteboardDataServer dataServer;
 	    
 	    /**
-	     * Make a WhiteboardServer that listens for connections on port.
-	     * 
+	     * Make a WhiteboardServer that listens for connections on the port.
+	     *  
 	     * @param port - port number, requires 0 <= port <= 65535
 	     */
 	    public WhiteboardMainServer(int port) throws IOException {
@@ -48,7 +58,7 @@ public class WhiteboardMainServer {
 
 	        Queue<String> arguments = new LinkedList<String>(Arrays.asList(args));
 	        try {
-	            while ( ! arguments.isEmpty()) {
+	            while (!arguments.isEmpty()) {
 	                String flag = arguments.remove();
 	                try {
 	                	if (flag.equals("--port")) {
@@ -74,15 +84,19 @@ public class WhiteboardMainServer {
 	        try {
 	            runWhiteboardServer(port);
 	        } catch (IOException e) {
-	            e.printStackTrace();
+	            ;
 	        }
 	    }
 
+	    /**
+	     * Creates a whiteboard server and runs it based off the port number.
+	     * @param port - port number
+	     * @throws IOException
+	     */
 	    public static void runWhiteboardServer(int port) throws IOException {
 	        WhiteboardMainServer server;
 	        
 	        server = new WhiteboardMainServer(port);
-	        
 	        server.serve();
 	    }
 }
