@@ -20,8 +20,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import canvas.Canvas;
-
 /**
  * This is the GUI for displaying the whiteboard. 
  */

@@ -1,4 +1,4 @@
-package canvas;
+package client;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -12,7 +12,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
-import client.WhiteboardClient;
+import whiteboard.LineSegment;
 
 /**
  * Canvas represents a drawing surface that allows the user to draw

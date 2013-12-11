@@ -1,8 +1,9 @@
-package canvas;
+package whiteboard;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import client.Canvas;
 import client.WhiteboardGUI;
 
 /**
@@ -10,11 +11,11 @@ import client.WhiteboardGUI;
  *
  */
 public class Whiteboard {
-	private String name;
-	private HashSet<String> users;
-	private ArrayList<LineSegment> lineSegments;
+	private final String name;
+	private final HashSet<String> users;
+	private final ArrayList<LineSegment> lineSegments;
 	// Only applicable for client whiteboards
-	private Canvas canvas;
+	private final Canvas canvas;
 	private WhiteboardGUI gui;
 
 	/**

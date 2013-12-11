@@ -9,9 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import canvas.Canvas;
-import canvas.LineSegment;
-import canvas.Whiteboard;
+import whiteboard.LineSegment;
+import whiteboard.Whiteboard;
 
 public class WhiteboardClient{
 	private final Socket socket;

@@ -1,4 +1,4 @@
-package canvas;
+package whiteboard;
 
 import java.awt.Color;
 import java.awt.Point;

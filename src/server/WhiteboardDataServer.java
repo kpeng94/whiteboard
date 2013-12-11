@@ -7,8 +7,8 @@ import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import canvas.LineSegment;
-import canvas.Whiteboard;
+import whiteboard.LineSegment;
+import whiteboard.Whiteboard;
 
 /**
  * Handles all of the data processing of the whiteboard server. This class

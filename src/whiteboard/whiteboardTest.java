@@ -1,10 +1,12 @@
-package canvas;
+package whiteboard;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
 import org.junit.Test;
+
+import client.Canvas;
 
 /**
  * Tests that methods of the whiteboard ADT function correctly.
