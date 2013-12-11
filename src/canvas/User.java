@@ -173,4 +173,8 @@ public class User {
 	public Whiteboard getWhiteboard() {
 		return this.whiteboard;
 	}
+	
+	public void setWhiteboard(Whiteboard board) {
+		this.whiteboard = board;
+	}
 }

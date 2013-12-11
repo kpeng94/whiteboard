@@ -78,6 +78,13 @@ public class Whiteboard {
     }
     
     /**
+     * Replaces users of whiteboard with new list of users
+     */
+    public void setUsers(ArrayList<String> newUsers) {
+    	users = newUsers;
+    }
+    
+    /**
      * Adds user to the list of users
      * @param user User to add
      */
