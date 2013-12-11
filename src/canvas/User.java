@@ -115,14 +115,6 @@ public class User {
 	}
 	
 	/**
-	 * Sends a string in the form "disconnect username [this.username]"
-	 * @return String representing the message for disconnecting THIS user
-	 */
-	public String disconnectUsername() {
-		return "disconnect username " + this.username;
-	}
-	
-	/**
 	 * Returns the username of THIS user 
 	 * @return this.username
 	 */

@@ -11,9 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+/**
+ * A GUI that prompts the user to perform 
+ * a specified action.
+ */
+@SuppressWarnings("serial")
 public class SimplePromptGUI extends JFrame {
-
-	private static final long serialVersionUID = -2082025637887191666L;
 	
 	private final JLabel promptText;
 	private final JLabel message;
@@ -27,22 +30,30 @@ public class SimplePromptGUI extends JFrame {
 	public static final int PROMPT_WHITEBOARD = 1;
 	public static final int REPROMPT_WHITEBOARD = 2;
 	
+	/**
+	 * Constructor for this GUI
+	 * @param clientObject Helps manage the client.
+	 * @param guiType Type of prompt message
+	 */
 	public SimplePromptGUI(WhiteboardClient clientObject, int guiType){
 		client = clientObject;
 		type = guiType;
 		
 		if(type == REPROMPT_USERNAME){
-			promptText = new JLabel("<html>Username already taken or invalid. Enter a new one. <br/> The name must not contain any whitespace.</html>");
+			promptText = new JLabel("<html>Username already taken or invalid. "
+					+ "Enter a new one. <br/> The name must not contain any whitespace.</html>");
 			message = new JLabel("New Username");
 			setTitle("Re-enter Username");
 		}
 		else if(type == PROMPT_WHITEBOARD){
-			promptText = new JLabel("<html>Please enter the desired whiteboard name. <br/> The name must not contain any whitespace.</html>");
+			promptText = new JLabel("<html>Please enter the desired whiteboard name. <br/> "
+					+ "The name must not contain any whitespace.</html>");
 			message = new JLabel("Whiteboard Name");
 			setTitle("Name Whiteboard");
 		}
 		else if(type == REPROMPT_WHITEBOARD){
-			promptText = new JLabel("<html>Whiteboard name already taken or invalid. Enter a new one. <br/> The name must not contain any whitespace.</html>");
+			promptText = new JLabel("<html>Whiteboard name already taken or invalid. "
+					+ "Enter a new one. <br/> The name must not contain any whitespace.</html>");
 			message = new JLabel("New Whiteboard Name");
 			setTitle("Name Whiteboard");
 		}
@@ -52,6 +63,7 @@ public class SimplePromptGUI extends JFrame {
 		
 		inputName = new JTextField();
 		ok = new JButton("OK");
+		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");
 		cancel.addActionListener(new CancelListener());
 		setResizable(false);
@@ -72,17 +84,41 @@ public class SimplePromptGUI extends JFrame {
 				.addGroup(layout.createParallelGroup().addComponent(ok).addComponent(cancel)));
 		
 		pack();
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 	
 	private class CancelListener implements ActionListener{
 		
+		/**
+		 * Action listener for the cancel button; 
+		 * will exit if the window is asking for the username.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			SimplePromptGUI.super.setVisible(false);
-			SimplePromptGUI.super.dispose();
+			SimplePromptGUI.this.setVisible(false);
+			if(type == SimplePromptGUI.REPROMPT_USERNAME){
+				System.exit(0);
+			}
+			SimplePromptGUI.this.dispose();
 		}	
 	}
 	
-	//TODO: Add a Listener for the "OK" button.
+	private class OKListener implements ActionListener{
+		
+		/**
+		 * Action listener for pressing the OK button.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent arg){
+			if(type == SimplePromptGUI.REPROMPT_USERNAME){
+				client.sendAddUsernameMessage(inputName.getText());
+			}
+			else if(type == SimplePromptGUI.PROMPT_WHITEBOARD || 
+					type == SimplePromptGUI.REPROMPT_WHITEBOARD){
+				client.sendCreateWhiteboardMessage(inputName.getText());
+			}
+			SimplePromptGUI.this.setVisible(false);
+			SimplePromptGUI.this.dispose();
+		}
+	}
 }
