@@ -62,6 +62,7 @@ public class Packet {
 	 * @return username of message-sending client
 	 */
 	public String getUser(){
+		assert type == Packet.NORMAL_PACKET;
 		return user;
 	}
 	
@@ -88,6 +89,7 @@ public class Packet {
 	 * @return queue stored in packet
 	 */
 	public BlockingQueue<Packet> getQueue(){
+		assert type == Packet.QUEUE_PACKET;
 		return queueData;
 	}
 }

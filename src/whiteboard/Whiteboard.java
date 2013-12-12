@@ -12,7 +12,8 @@ import client.WhiteboardGUI;
  * 		a list of lineSegments corresponding to line segments users have
  * 		drawn, a canvas for the clients to draw, and the reference to 
  * 		the GUI to link the view with the model/controller.
- *     
+ * 
+ * Rep Invariants: 
  *
  */
 public class Whiteboard {
