@@ -44,7 +44,7 @@ public class LoginGUI extends JFrame {
 
 	/**
 	 * Constructor for this GUI. 
-	 * @param clientObject Helps manage the client.
+	 * @param clientObject Gives GUI functionality to send messages to the server.
 	 */
 	public LoginGUI(WhiteboardClientMain clientObject){
 		// Create the various labels

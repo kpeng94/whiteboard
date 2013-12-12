@@ -10,6 +10,10 @@ import java.net.URL;
 
 import server.WhiteboardMainServer;
 
+/**
+ * Utility class for helping set up a server-client connection.
+ *
+ */
 public class TestUtil {
     
     private static final int port = 1234;
@@ -38,10 +42,18 @@ public class TestUtil {
       return ret;
     }
 
+    /**
+     * Starts the server.
+     */
     public static void startServer() {      
       startServer("--port", portStr);
     }
 
+    /**
+     * Creates a connection to the server
+     * @return Socket for the connection
+     * @throws IOException if too many attempts or connection interrupted
+     */
     public static Socket connect() throws IOException {
       Socket ret = null;
       final int MAX_ATTEMPTS = 50;
@@ -63,6 +75,10 @@ public class TestUtil {
       return ret;
     }
 
+    /**
+     * Starts the server given specific arguments.
+     * @param args The arguments
+     */
     private static void startServer(final String... args) {
         final String myArgs[] = args;
         new Thread(new Runnable() {
@@ -77,10 +93,12 @@ public class TestUtil {
         }).start();
     }
 
-    public static boolean eqNoSpace(String s1, String s2) {
-        return s1.replaceAll("\\s+", "").equals(s2.replaceAll("\\s+", ""));
-    }
-
+    /**
+     * Gets the string representation of the next non empty line.
+     * @param in Buffered reader
+     * @return next non empty line 
+     * @throws IOException if the buffered reader throws an IOException
+     */
     public static String nextNonEmptyLine(BufferedReader in) throws IOException {
         while (true) {
             String ret = in.readLine();

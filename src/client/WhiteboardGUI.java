@@ -37,6 +37,7 @@ public class WhiteboardGUI extends JFrame {
 	/**
 	 * Constructor for whiteboard GUI
 	 * @param canvas The canvas to display in the GUI
+	 * @param whiteboardName name of whiteboard
 	 */
 	public WhiteboardGUI(final Canvas canvas, String whiteboardName){
 

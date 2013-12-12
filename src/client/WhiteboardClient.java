@@ -12,6 +12,10 @@ import java.util.HashSet;
 import whiteboard.LineSegment;
 import whiteboard.Whiteboard;
 
+/**
+ * Handles all of the message processing for the client.
+ *
+ */
 public class WhiteboardClient{
 	private final Socket socket;
 

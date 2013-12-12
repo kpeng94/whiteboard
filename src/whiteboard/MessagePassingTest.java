@@ -2,6 +2,9 @@ package whiteboard;
 
 /**
  * @category no_didit
+ * 
+ * Tests messages passed between the server and the client,
+ * detailed by our protocol.
  */
 
 import static org.junit.Assert.*;
