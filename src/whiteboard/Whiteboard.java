@@ -10,10 +10,13 @@ import client.WhiteboardGUI;
  * Whiteboard is an abstract datatype that represents the whiteboard.
  * It has a unique name, a set of users currently using the whiteboard, 
  * 		a list of lineSegments corresponding to line segments users have
- * 		drawn, a canvas for the clients to draw, and the reference to 
- * 		the GUI to link the view with the model/controller.
+ * 		drawn on the board, a canvas for the clients to draw, and the 
+ * 		reference to the GUI to link the view with the model/controller.
+ * Whiteboard is in charge of maintaining these attributes; it can remove,
+ * 		add, or set users, and it can add line segments (as well as call
+ * 		observer methods).
  * 
- * Rep Invariants: 
+ * Rep Invariants: whiteboard name cannot be null, and cannot change after initialization (final and immutable)
  *
  */
 public class Whiteboard {
@@ -23,6 +26,10 @@ public class Whiteboard {
 	// Only applicable for client whiteboards
 	private final Canvas canvas;
 	private WhiteboardGUI gui;
+	
+	private void checkRep() {
+		assert name != null;
+	}
 
 	/**
 	 * Constructor for a new whiteboard object

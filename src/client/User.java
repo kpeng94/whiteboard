@@ -11,7 +11,9 @@ import whiteboard.Whiteboard;
  * User contains information about the boards it is currently connected to (has opened), 
  * 		and its username (which is a unique identifier).
  * 
- * Rep Invariant: none of the whiteboards in whiteboards is null.
+ * Rep Invariant: 
+ * - none of the whiteboards in whiteboards is null.
+ * - username cannot be null, and cannot change after initialization (final and immutable)
  */
 public class User {
 
@@ -22,6 +24,7 @@ public class User {
 		for (Whiteboard board : whiteboards.values()) {
 			assert board != null;
 		}
+		assert username != null;
 	}
 	
 	/**
