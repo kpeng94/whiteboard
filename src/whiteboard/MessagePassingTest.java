@@ -1,5 +1,9 @@
 package whiteboard;
 
+/**
+ * @category no_didit
+ */
+
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
