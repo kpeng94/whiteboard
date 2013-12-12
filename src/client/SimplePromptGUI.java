@@ -28,6 +28,7 @@ public class SimplePromptGUI extends JFrame {
 	private final JTextField inputName;
 	private final JButton ok;
 	private final JButton cancel;
+	
 	private final int type;
 	
 	// Provides GUI a way to send messages to the server.
@@ -69,7 +70,7 @@ public class SimplePromptGUI extends JFrame {
 		}
 		// No other type is allowed
 		else{
-			throw new RuntimeException("Illegal constructor call");
+			throw new IllegalArgumentException("Illegal constructor call");
 		}
 		
 		inputName = new JTextField();
@@ -102,15 +103,17 @@ public class SimplePromptGUI extends JFrame {
 	/**
 	 * Action listener for the cancel button; 
 	 * will exit the program if the window is asking for the username.
-	 * Otherwise, only the window was close.
+	 * Otherwise, only the window will close.
 	 */
 	private class CancelListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			SimplePromptGUI.this.setVisible(false);
+			// Terminate the program if user doesn't submit a proper username
 			if(type == SimplePromptGUI.REPROMPT_USERNAME){
 				System.exit(0);
 			}
+			// Otherwise just close the window
 			SimplePromptGUI.this.dispose();
 		}	
 	}

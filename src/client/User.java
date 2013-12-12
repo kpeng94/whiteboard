@@ -12,7 +12,7 @@ import whiteboard.Whiteboard;
  * 		and its username (which is a unique identifier).
  * 
  * Rep Invariant: 
- * - none of the whiteboards in whiteboards is null.
+ * - none of the Whiteboards in whiteboards is null.
  * - username cannot be null, and cannot change after initialization (final and immutable)
  */
 public class User {
