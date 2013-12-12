@@ -174,7 +174,7 @@ public class WhiteboardClient{
 					for (int i = 2; i < request.length; i++) {
 						newWhiteboardNames.add(request[i]);
 					}
-					mainGUI.updateTable(newWhiteboardNames);
+					mainGUI.addWhiteboards(newWhiteboardNames);
 				} 
 				// PROTOCOL: list whitboard-user [WHITEBOARD] [USER] [USER] [USER] ...
 				else if (request[0].equals("list") && 

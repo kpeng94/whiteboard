@@ -48,15 +48,15 @@ public class WhiteboardListGUI extends JFrame {
 		
 		label = new JLabel("Select the whiteboard to join, or create a new one.");
 		
+		// Create buttons and the appropriate listeners for them.
 		createWhiteboard = new JButton("New Whiteboard");
 		createWhiteboard.addActionListener(new WhiteboardCreateListener());
-
 		selectWhiteboard = new JButton("Select Whiteboard");
 		selectWhiteboard.addActionListener(new WhiteboardSelectListener());
-		
 		logout = new JButton("Logout");
 		logout.addActionListener(new LogoutListener());
 		
+		// Create the table and scroll panel for the list of whiteboards.
 		model = new DefaultTableModel(new Object[]{"Whiteboard Name"}, 0);
 		table = new JTable(model){
 			public boolean isCellEditable(int row, int column) {                
@@ -68,6 +68,7 @@ public class WhiteboardListGUI extends JFrame {
 		scrollPane = new JScrollPane(table);
 		
 		setResizable(false);
+		// Do not allow the user to X out of this screen! It's important!
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -91,16 +92,31 @@ public class WhiteboardListGUI extends JFrame {
 		pack();
 	}
 	
-	public void updateTable(ArrayList<String> users){
-		for(String s: users){
+	/**
+	 * Adds several whiteboards to the list of whiteboards. 
+	 * This method changes the underlying model and can be called
+	 * from non-EDT threads. 
+	 * @param users Array with whiteboard names to add to list
+	 */
+	public void addWhiteboards(ArrayList<String> whiteboards){
+		for(String s: whiteboards){
 			model.addRow(new Object[]{s});
 		}
 	}
 	
+	/**
+	 * Adds a single whiteboard name to the list of whiteboards.
+	 * This method changes the underlying model and can be called
+	 * from non-EDT threads.
+	 * @param name Whiteboard name to add to list
+	 */
 	public void addWhiteboard(String name){
 		model.addRow(new Object[]{name});
 	}
 	
+	/**
+	 * Throws an error dialog when the server reports a failure to join/exit a whiteboard.
+	 */
 	public void throwWhiteboardErrorMessage(){
 		JOptionPane.showMessageDialog(null, 
 				"Your attempt to join this whiteboard failed. You may already have the window open.",
@@ -121,16 +137,16 @@ public class WhiteboardListGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * An action listener for when a user wants to join a whiteboard.
+	 * Takes the selected row and tries to join the whiteboard 
+	 * listed in that row.
+	 */
 	private class WhiteboardSelectListener implements ActionListener {
-
-		/**
-		 * Action performed when a user wants to join a whiteboard.
-		 * Takes the selected row and tries to join the whiteboard 
-		 * listed in that row.
-		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int selectedRow = table.getSelectedRow();
+			// This makes sure the user actually selects a row
 			if (selectedRow >= 0) {
 				String selectedWhiteboardName = (String) model.getValueAt(selectedRow, 0);
 				client.sendJoinWhiteboardMessage(selectedWhiteboardName);				

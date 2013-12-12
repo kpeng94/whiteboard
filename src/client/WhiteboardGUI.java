@@ -42,6 +42,8 @@ public class WhiteboardGUI extends JFrame {
 	public WhiteboardGUI(final Canvas canvas, String whiteboardName){
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// When the window is closed, make sure the client sends a signal to the
+		// server notifying it of the closure.
 		addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
