@@ -97,7 +97,7 @@ public class WhiteboardGUI extends JFrame {
 		add(canvas, BorderLayout.WEST);
 
 		// Add users list
-		String[] tableColumns = {"Guests"}; 
+		String[] tableColumns = {"Users Currently Editing"}; 
 		tableModel = new DefaultTableModel(tableColumns, 0);
 		table = new JTable(tableModel){
 			public boolean isCellEditable(int row, int column) {                
