@@ -16,7 +16,8 @@ import client.WhiteboardGUI;
  * 		add, or set users, and it can add line segments (as well as call
  * 		observer methods).
  * 
- * Rep Invariants: whiteboard name cannot be null, and cannot change after initialization (final and immutable)
+ * Rep Invariants: whiteboard name, line segment array, and users set cannot be null, 
+ * 				   and cannot change after initialization (final and immutable)
  *
  */
 public class Whiteboard {
@@ -29,6 +30,8 @@ public class Whiteboard {
 	
 	private void checkRep() {
 		assert name != null;
+		assert lineSegments != null;
+		assert users != null;
 	}
 
 	/**
@@ -74,9 +77,10 @@ public class Whiteboard {
 	}
 
 	/**
-	 * Adds many users to the list of users
+	 * Adds multiple users to the list of users
+	 * @param newUsers Set of users to add
 	 */
-	public void setUsers(HashSet<String> newUsers) {
+	public void addUsers(HashSet<String> newUsers) {
 		for(String user: newUsers){
 			addUser(user);
 		}

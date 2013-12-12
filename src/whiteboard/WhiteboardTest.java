@@ -104,7 +104,7 @@ public class WhiteboardTest {
 		HashSet<String> newUsers = new HashSet<String>();
 		newUsers.add("psyche!");
 		newUsers.add("ok");
-		whiteboard.setUsers(newUsers);
+		whiteboard.addUsers(newUsers);
 		newUsers.add("me!");
 		assertTrue(newUsers.equals(whiteboard.getUsers()));
 	}
@@ -136,5 +136,4 @@ public class WhiteboardTest {
 		assertEquals(lineSegments, whiteboard.getLineSegments());
 		
 	}
-
 }

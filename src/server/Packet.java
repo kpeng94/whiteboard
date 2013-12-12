@@ -5,19 +5,18 @@ import java.util.concurrent.BlockingQueue;
 /**
  * This class represents an immutable packet of information sent between threads
  * in the server. There are three types of packets, indicated by the type.
- * A queue packet is used when a user is requesting a username, and indicates
+ * <br/> A Queue packet is used when a user is requesting a username, and indicates
  * that the packet has a non-null queueData field. 
- * A server packet is used when the server sends messages back to the client and 
+ * <br/> A Server packet is used when the server sends messages back to the client and 
  * indicates that both user and queueData are null. 
- * A normal packet is used when
- * the client sends non-username related information to the server.
- *
+ * <br/> A Normal packet is used when the client sends non-username related information to the server.
  */
 public class Packet {
 	private String user = null;
 	private String data = null;
 	// Contains a way to send messages back to the user.
 	private BlockingQueue<Packet> queueData = null;
+	
 	private int type;
 	
 	public static int QUEUE_PACKET = 0;

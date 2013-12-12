@@ -59,7 +59,6 @@ public class WhiteboardClient{
 						handleMessages(input);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		});
@@ -187,7 +186,7 @@ public class WhiteboardClient{
 						}
 						newUserList.add(request[i]);
 					}
-					user.getWhiteboard(request[2]).setUsers(newUserList);
+					user.getWhiteboard(request[2]).addUsers(newUserList);
 				} 
 				// PROTOCOL: add whiteboard [WHITEBOARD]
 				else if (request[0].equals("add") &&

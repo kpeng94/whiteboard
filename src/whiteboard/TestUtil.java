@@ -1,13 +1,9 @@
 package whiteboard;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import server.WhiteboardMainServer;
 
 /**
@@ -18,29 +14,6 @@ public class TestUtil {
     
     private static final int port = 1234;
     private static final String portStr = Integer.toString(port);
-    
-    /**
-     * Return the absolute path of the specified file resource on the current Java classpath.
-     * Throw an exception if a valid path to an existing file cannot be produced for any reason.
-     */
-    public static String getResourcePathName(String fileName) throws IOException {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      if (classLoader == null)
-        throw new IOException("Failed to get classloader");
-      URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
-      if (url == null)
-        throw new IOException("Failed to locate resource " + fileName);
-      File file;
-      try {
-        file = new File(url.toURI());
-      } catch (URISyntaxException e) {
-        throw new IOException("Invalid resource URI type: " + e);
-      }
-      String ret = file.getAbsolutePath();
-      if (!new File(ret).exists())
-        throw new IOException("File " + ret + " does not exist");
-      return ret;
-    }
 
     /**
      * Starts the server.

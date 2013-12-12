@@ -16,7 +16,6 @@ import whiteboard.Whiteboard;
  * returns messages by use of individualized return blocking queues. This is also
  * where all whiteboard data is stored, as well as information about the users currently
  * on the server.
- *
  */
 public class WhiteboardDataServer extends Thread {
 	// Holds all whiteboard information, hashed by the name.

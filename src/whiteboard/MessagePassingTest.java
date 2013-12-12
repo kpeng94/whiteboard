@@ -114,6 +114,5 @@ public class MessagePassingTest {
         } catch (SocketTimeoutException e) {
             throw new RuntimeException(e);
         }
-        
     }
 }
