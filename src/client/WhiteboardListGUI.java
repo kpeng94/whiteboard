@@ -39,6 +39,10 @@ public class WhiteboardListGUI extends JFrame {
 	// Provides the ability for the GUI to relay information back to the server.
 	private final WhiteboardClient client;
 	
+	/**
+	 * Constructor for the list GUI.
+	 * @param clientSocket Gives GUI functionality to send messages to server 
+	 */
 	public WhiteboardListGUI(WhiteboardClient clientSocket){
 		client = clientSocket;
 		

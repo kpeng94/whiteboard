@@ -41,6 +41,7 @@ public class Whiteboard {
 		this.canvas = null;
 		this.gui = null;
 		this.lineSegments = new ArrayList<LineSegment>();
+		this.checkRep();
 	}
 	
 	/**
@@ -53,6 +54,7 @@ public class Whiteboard {
 		this.canvas = canvas;
 		this.users = new HashSet<String>();
 		this.lineSegments = new ArrayList<LineSegment>();
+		this.checkRep();
 	}
 
 	/**

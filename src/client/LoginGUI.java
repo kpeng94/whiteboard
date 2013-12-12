@@ -44,7 +44,7 @@ public class LoginGUI extends JFrame {
 
 	/**
 	 * Constructor for this GUI. 
-	 * @param clientObject Helps manage the client.
+	 * @param clientObject Gives GUI functionality to send messages to the server.
 	 */
 	public LoginGUI(WhiteboardClientMain clientObject){
 		loginText = new JLabel("Log into the whiteboard server.");
@@ -92,6 +92,9 @@ public class LoginGUI extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Throws an error message for invalid connection.
+	 */
 	public void throwErrorMessage(){
 		JOptionPane.showMessageDialog(null, 
 				"Your connection was refused or is invalid. Check your IP/port, or your firewall.",
