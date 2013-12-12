@@ -29,20 +29,6 @@ public class Canvas extends JPanel {
     private String name;
     
     /**
-     * Constructor for a canvas. This will be specifically for the 
-     * server, as whiteboardClient will be null.
-     * 
-     * @param width width in pixels
-     * @param height height in pixels
-     */
-    public Canvas(int width, int height) {
-    	this.color = Color.BLACK;
-    	this.strokeWidth = 3;
-        this.setPreferredSize(new Dimension(width, height));
-        this.whiteboardClient = null;
-    }
-    
-    /**
      * Constructor for a canvas for a client.
      * 
      * @param width width in pixels
@@ -83,7 +69,7 @@ public class Canvas extends JPanel {
      * Toggles the state of the eraser / pen.
      */
     public void toggleEraserMode() {
-    	isEraserModeOn = !isEraserModeOn;
+    	this.isEraserModeOn = !this.isEraserModeOn;
     }
     
     /**
@@ -109,19 +95,19 @@ public class Canvas extends JPanel {
     public void paintComponent(Graphics g) {
         // If this is the first time paintComponent() is being called,
         // make our drawing buffer.
-        if (drawingBuffer == null) {
+        if (this.drawingBuffer == null) {
             makeDrawingBuffer();
         }
         
         // Copy the drawing buffer to the screen.
-        g.drawImage(drawingBuffer, 0, 0, null);
+        g.drawImage(this.drawingBuffer, 0, 0, null);
     }
     
     /**
      * Make the drawing buffer and draw some starting content for it.
      */
     private void makeDrawingBuffer() {
-        drawingBuffer = createImage(getWidth(), getHeight());
+        this.drawingBuffer = createImage(getWidth(), getHeight());
         fillWithWhite();
     }
     
@@ -129,7 +115,7 @@ public class Canvas extends JPanel {
      * Make the drawing buffer entirely white.
      */
     private void fillWithWhite() {
-        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+        final Graphics2D g = (Graphics2D) this.drawingBuffer.getGraphics();
 
         g.setColor(Color.WHITE);
         g.fillRect(0,  0,  getWidth(), getHeight());
@@ -142,13 +128,14 @@ public class Canvas extends JPanel {
     /**
      * Draws the given line segment on to the screen.
      * 
-     * @param lineSegment
+     * @param lineSegment Line segment to draw onto the screen
      */
     public void drawLineSegment(LineSegment lineSegment) {
-    	if (drawingBuffer == null) {
+    	if (this.drawingBuffer == null) {
     		makeDrawingBuffer();
     	}
-        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+    	
+        final Graphics2D g = (Graphics2D) this.drawingBuffer.getGraphics();
         g.setColor(lineSegment.getColor());
         g.setStroke(new BasicStroke(lineSegment.getStrokeSize(), 
         							BasicStroke.CAP_ROUND, 
@@ -167,7 +154,7 @@ public class Canvas extends JPanel {
      */
     public void sendLineSegmentToServer(int x1, int y1, int x2, int y2) {        
     	Color color;
-    	if (isEraserModeOn) {
+    	if (this.isEraserModeOn) {
         	color = Color.WHITE;
         } else {        	
             color = this.color;

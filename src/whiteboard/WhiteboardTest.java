@@ -22,7 +22,7 @@ public class WhiteboardTest {
 	public void testGetName() {
 		int width = 800; 
 		int height = 600;
-		Canvas canvas = new Canvas(width, height);
+		Canvas canvas = new Canvas(width, height, null, "canvas");
 		Whiteboard whiteboard = new Whiteboard("testName", canvas);
 		assertEquals("testName", whiteboard.getName());
 		assertTrue(whiteboard.getUsers().equals(new HashSet<String>()));
@@ -33,7 +33,7 @@ public class WhiteboardTest {
 	public void testAddGetUsers() {
 		int width = 800; 
 		int height = 600;
-		Canvas canvas = new Canvas(width, height);
+		Canvas canvas = new Canvas(width, height, null, "canvas");
 		Whiteboard whiteboard = new Whiteboard("", canvas);
 		whiteboard.addUser("genghis");
 		whiteboard.addUser("kevin");
@@ -56,7 +56,7 @@ public class WhiteboardTest {
 	public void testRemoveUsers() {
 		int width = 800; 
 		int height = 600;
-		Canvas canvas = new Canvas(width, height);
+		Canvas canvas = new Canvas(width, height, null, "canvas");
 		Whiteboard whiteboard = new Whiteboard("", canvas);
 		whiteboard.addUser("genghis");
 		whiteboard.addUser("kevin");
@@ -77,7 +77,7 @@ public class WhiteboardTest {
 		public void testRemoveUsersFailure() {
 			int width = 800; 
 			int height = 600;
-			Canvas canvas = new Canvas(width, height);
+			Canvas canvas = new Canvas(width, height, null, "canvas");
 			Whiteboard whiteboard = new Whiteboard("", canvas);
 			whiteboard.addUser("hi");
 			whiteboard.addUser("kevin");
@@ -98,7 +98,7 @@ public class WhiteboardTest {
 	public void testSetUsers() {
 		int width = 800; 
 		int height = 600;
-		Canvas canvas = new Canvas(width, height);
+		Canvas canvas = new Canvas(width, height, null, "canvas");
 		Whiteboard whiteboard = new Whiteboard("", canvas);
 		whiteboard.addUser("me!");
 		HashSet<String> newUsers = new HashSet<String>();
@@ -114,7 +114,7 @@ public class WhiteboardTest {
 	public void testAddUserExistingEntry() {
 		int width = 800; 
 		int height = 600;
-		Canvas canvas = new Canvas(width, height);
+		Canvas canvas = new Canvas(width, height, null, "canvas");
 		Whiteboard whiteboard = new Whiteboard("", canvas);
 		whiteboard.addUser("parker");
 		boolean success = whiteboard.addUser("parker");

@@ -47,11 +47,14 @@ public class LoginGUI extends JFrame {
 	 * @param clientObject Helps manage the client.
 	 */
 	public LoginGUI(WhiteboardClientMain clientObject){
+		// Create the various labels
 		loginText = new JLabel("Log into the whiteboard server.");
 		displayIP = new JLabel("Server IP");
 		displayPort = new JLabel("Server Port");
 		displayUserName = new JLabel("Username");
 
+		// Create the text fields for user input and let users press "Enter"
+		// to submit the form
 		typeIP = new JTextField("");
 		typeIP.addActionListener(new OKListener());
 		typePort = new JTextField("4444");
@@ -59,6 +62,7 @@ public class LoginGUI extends JFrame {
 		typeUserName = new JTextField("");
 		typeUserName.addActionListener(new OKListener());
 		
+		// Create the buttons and add the appropriate listeners
 		ok = new JButton("OK");
 		ok.addActionListener(new OKListener());
 		cancel = new JButton("Cancel");
@@ -92,6 +96,10 @@ public class LoginGUI extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 	
+	/**
+	 * Creates an error dialogue indicating a failure to connect to the server properly.
+	 * Also toggles the OK/Cancel buttons of the GUI so that they are re-enabled again.
+	 */
 	public void throwErrorMessage(){
 		JOptionPane.showMessageDialog(null, 
 				"Your connection was refused or is invalid. Check your IP/port, or your firewall.",
@@ -122,15 +130,18 @@ public class LoginGUI extends JFrame {
 	private class OKListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			// Disable the user from trying to connect while another connection is in progress
 			ok.setEnabled(false);
 			cancel.setEnabled(false);
 			try{
+				// Try to connect to the host using another thread
 				final String host = typeIP.getText();
 				final int port = Integer.parseInt(typePort.getText());
 				SwingWorker<Socket, Void> worker = new SwingWorker<Socket, Void>(){
 					@Override
 					public Socket doInBackground() {
 						try {
+							// Time out in 5 seconds to prevent everything from hanging
 							Socket socket = new Socket();
 							socket.connect(new InetSocketAddress(host,port), 5000);
 							return socket;
@@ -148,6 +159,7 @@ public class LoginGUI extends JFrame {
 							throw new RuntimeException("Fatal error occurred");
 						}
 						if(socket != null){
+							// If the socket successfully connected, move on from the login screen
 							client.initializeClient(socket, typeUserName.getText());
 							LoginGUI.this.setVisible(false);
 							LoginGUI.this.dispose();
