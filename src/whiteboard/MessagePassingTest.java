@@ -72,7 +72,11 @@ public class MessagePassingTest {
     	    // Genghis tries a taken username
     	    out2.println("add username parker");
     	    assertEquals("retry username", TestUtil.nextNonEmptyLine(in2));
-    	    
+
+    	    // Genghis tries an invalid username
+    	    out2.println("add username park er");
+    	    assertEquals("retry username", TestUtil.nextNonEmptyLine(in2));
+
     	    // Genghis tries a not taken username
     	    out2.println("add username genghis");
     	    assertEquals("success username genghis", TestUtil.nextNonEmptyLine(in2));
